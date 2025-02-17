@@ -13,11 +13,11 @@ class PieWheel(Widget):
         self.angle = 0
         self.segments = ["Red", "Yellow", "Orange", "Purple", "Green"]
         self.colors = [
-            (1, 0, 0, 1),  # Red
-            (1, 1, 0, 1),  # Yellow
-            (1, 0.5, 0, 1),  # Orange
-            (0.5, 0, 0.5, 1),  # Purple
-            (0, 1, 0, 1)  # Green
+            (1, 0, 0, 1),
+            (1, 1, 0, 1),
+            (1, 0.5, 0, 1),
+            (0.5, 0, 0.5, 1),
+            (0, 1, 0, 1)
         ]
         self.radius = 150
         self.target_angle = 0
@@ -40,18 +40,16 @@ class PieWheel(Widget):
                         angle_start=start_angle, 
                         angle_end=start_angle + (360 / len(self.segments)))
                 
-            # Outline for the wheel
             Color(1, 1, 1, 1)
             Line(circle=(self.center_x, self.center_y, self.radius), width=3)
 
             PopMatrix()
 
-            # Arrow (Pointer)
-            Color(1, 1, 1, 1)  # White arrow
+            Color(1, 1, 1, 1)
             Triangle(points=[
-                self.center_x - 10, self.center_y + self.radius + 15,  # Left point
-                self.center_x + 10, self.center_y + self.radius + 15,  # Right point
-                self.center_x, self.center_y + self.radius  # Tip of arrow
+                self.center_x - 10, self.center_y + self.radius + 15,  
+                self.center_x + 10, self.center_y + self.radius + 15,
+                self.center_x, self.center_y + self.radius
             ])
 
     def update_canvas(self, *args):
@@ -66,7 +64,7 @@ class PieWheel(Widget):
         if self.target_angle > 0:
             self.angle += self.speed
             self.target_angle -= self.speed
-            self.speed = max(self.speed * 0.98, 0.5)  # Smooth deceleration
+            self.speed = max(self.speed * 0.98, 0.5)
             self.rotation.angle = self.angle
             self.canvas.ask_update()
         else:
@@ -77,16 +75,3 @@ class PieWheel(Widget):
         segment_size = 360 / len(self.segments)
         selected_index = int((self.angle % 360) / segment_size)
         print(f"Result: {self.segments[selected_index]}")
-
-class RandomizerApp(App):
-    def build(self):
-        layout = BoxLayout(orientation='vertical')
-        self.wheel = PieWheel()
-        button = Button(text="Spin", size_hint=(1, 0.2))
-        button.bind(on_press=lambda x: self.wheel.spin())
-        layout.add_widget(self.wheel)
-        layout.add_widget(button)
-        return layout
-
-if __name__ == "__main__":
-    RandomizerApp().run()

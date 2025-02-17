@@ -1,18 +1,29 @@
 from kivy.app import App
+import components.wheel as wheel
+import components.spinButton as spinButton
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from components.wheel import PieWheel  # Import PieWheel from wheel.py
+from kivy.core.window import Window
+
+class GameLayout(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.spacing = 10
+        self.padding = 10
 
 class MyApp(App):
     def build(self):
-        layout = BoxLayout(orientation='vertical')
-        self.wheel = PieWheel()
+        Window.size = (1280, 720)
         
-        button = Button(text="Spin", size_hint=(1, 0.2))
-        button.bind(on_press=lambda x: self.wheel.spin())
-
+        layout = GameLayout()
+        
+        self.wheel = wheel.PieWheel()
         layout.add_widget(self.wheel)
-        layout.add_widget(button)
+        
+        self.spin_button = spinButton.SpinButton()
+        self.spin_button.wheel = self.wheel
+        layout.add_widget(self.spin_button)
+        
         return layout
 
 if __name__ == '__main__':
