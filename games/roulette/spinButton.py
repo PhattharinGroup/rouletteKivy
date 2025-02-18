@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.properties import ObjectProperty
-import components.wheel as wheel
+import games.roulette.wheel as wheel
 
 class SpinButton(Button):
     wheel = ObjectProperty(None)

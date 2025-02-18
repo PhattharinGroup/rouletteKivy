@@ -1,6 +1,6 @@
 from kivy.app import App
-import components.wheel as wheel
-import components.spinButton as spinButton
+import games.roulette.wheel as wheel
+import games.roulette.spinButton as spinButton
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
