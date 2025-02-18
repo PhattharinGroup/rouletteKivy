@@ -11,17 +11,25 @@ class PieWheel(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.angle = 0
-        self.segments = ["Red", "Yellow", "Orange", "Purple", "Green"]
-        self.colors = [
-            (1, 0, 0, 1),
-            (1, 1, 0, 1),
-            (1, 0.5, 0, 1),
-            (0.5, 0, 0.5, 1),
-            (0, 1, 0, 1)
+        # Standard roulette numbers in order
+        self.numbers = [
+            0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10,
+            5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
         ]
-        self.radius = 150
+        # Colors for each number (0 is green, others alternate between red and black)
+        self.colors = []
+        for num in self.numbers:
+            if num == 0:
+                self.colors.append((0, 0.5, 0, 1))  # Green for 0
+            elif num in [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]:
+                self.colors.append((0.8, 0, 0, 1))  # Red
+            else:
+                self.colors.append((0.2, 0.2, 0.2, 1))  # Black
+        
+        self.radius = 400
         self.target_angle = 0
         self.speed = 0
+        self.result = None
 
         self.bind(pos=self.update_canvas, size=self.update_canvas)
         self.draw_wheel()
@@ -32,20 +40,31 @@ class PieWheel(Widget):
             PushMatrix()
             self.rotation = Rotate(angle=self.angle, origin=self.center)
 
-            for i, color in enumerate(self.colors):
-                Color(*color)
-                start_angle = (360 / len(self.segments)) * i
-                Ellipse(pos=(self.center_x - self.radius, self.center_y - self.radius), 
-                        size=(self.radius * 2, self.radius * 2), 
-                        angle_start=start_angle, 
-                        angle_end=start_angle + (360 / len(self.segments)))
+            # Draw segments
+            for i, (number, color) in enumerate(zip(self.numbers, self.colors)):
+                segment_angle = 360 / len(self.numbers)
+                start_angle = segment_angle * i
                 
-            Color(1, 1, 1, 1)
+                # Draw segment
+                Color(*color)
+                Ellipse(pos=(self.center_x - self.radius, self.center_y - self.radius), 
+                       size=(self.radius * 2, self.radius * 2), 
+                       angle_start=start_angle, 
+                       angle_end=start_angle + segment_angle)
+                
+                # Draw number text
+                Color(1, 1, 1, 1)  # White text
+                # Note: Using Line() to draw numbers is complex, 
+                # consider using Label with canvas.after for text
+
+            # Draw outer circle
+            Color(0.8, 0.8, 0.8, 1)  # Silver
             Line(circle=(self.center_x, self.center_y, self.radius), width=3)
 
             PopMatrix()
 
-            Color(1, 1, 1, 1)
+            # Draw pointer
+            Color(1, 0.8, 0, 1)  # Gold
             Triangle(points=[
                 self.center_x - 10, self.center_y + self.radius + 15,  
                 self.center_x + 10, self.center_y + self.radius + 15,
@@ -56,14 +75,15 @@ class PieWheel(Widget):
         self.draw_wheel()
 
     def spin(self):
-        self.target_angle = random.randint(360, 1080)
-        self.speed = 15
-        Clock.schedule_interval(self.update_spin, 1 / 60)
+        self.target_angle = random.randint(720, 1440)  # 2-4 full rotations
+        self.speed = 20
+        Clock.schedule_interval(self.update_spin, 1/60)
 
     def update_spin(self, dt):
         if self.target_angle > 0:
-            self.angle += self.speed
-            self.target_angle -= self.speed
+            rotation_amount = min(self.speed, self.target_angle)
+            self.angle += rotation_amount
+            self.target_angle -= rotation_amount
             self.speed = max(self.speed * 0.98, 0.5)
             self.rotation.angle = self.angle
             self.canvas.ask_update()
@@ -72,6 +92,10 @@ class PieWheel(Widget):
             self.determine_result()
 
     def determine_result(self):
-        segment_size = 360 / len(self.segments)
-        selected_index = int((self.angle % 360) / segment_size)
-        print(f"Result: {self.segments[selected_index]}")
+        segment_size = 360 / len(self.numbers)
+        # Calculate the final position considering multiple rotations
+        final_angle = self.angle % 360
+        selected_index = int(final_angle / segment_size)
+        self.result = self.numbers[selected_index]
+        print(f"Ball landed on: {self.result}")
+        return self.result
