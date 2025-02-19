@@ -1,10 +1,13 @@
 import random
+import math
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.graphics import Rotate, Color, Ellipse, Line, Triangle, PushMatrix, PopMatrix
+from kivy.graphics import Rotate, Color, Ellipse, Line, Triangle, PushMatrix, PopMatrix, Rectangle
 from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.core.text import Label as CoreLabel
 
 
 class PieWheel(Widget):
@@ -26,7 +29,6 @@ class PieWheel(Widget):
             else:
                 self.colors.append((0.2, 0.2, 0.2, 1))  # Black
         
-        self.radius = 400
         self.target_angle = 0
         self.speed = 0
         self.result = None
@@ -36,6 +38,7 @@ class PieWheel(Widget):
 
     def draw_wheel(self):
         self.canvas.clear()
+        self.radius = min(self.width, self.height) / 2 - 20  # Adjust radius to fit within the window
         with self.canvas:
             PushMatrix()
             self.rotation = Rotate(angle=self.angle, origin=self.center)
@@ -44,18 +47,23 @@ class PieWheel(Widget):
             for i, (number, color) in enumerate(zip(self.numbers, self.colors)):
                 segment_angle = 360 / len(self.numbers)
                 start_angle = segment_angle * i
-                
+
                 # Draw segment
                 Color(*color)
                 Ellipse(pos=(self.center_x - self.radius, self.center_y - self.radius), 
-                       size=(self.radius * 2, self.radius * 2), 
-                       angle_start=start_angle, 
-                       angle_end=start_angle + segment_angle)
-                
+                        size=(self.radius * 2, self.radius * 2), 
+                        angle_start=start_angle, 
+                        angle_end=start_angle + segment_angle)
+
                 # Draw number text
+                angle_rad = math.radians(start_angle + segment_angle / 2)
+                text_x = self.center_x + (self.radius - 30) * 0.9 * math.cos(angle_rad)
+                text_y = self.center_y + (self.radius - 30) * 0.9 * math.sin(angle_rad)
+                label = CoreLabel(text=str(number), font_size=20)
+                label.refresh()
+                texture = label.texture
                 Color(1, 1, 1, 1)  # White text
-                # Note: Using Line() to draw numbers is complex, 
-                # consider using Label with canvas.after for text
+                self.canvas.add(Rectangle(texture=texture, pos=(text_x - texture.width / 2, text_y - texture.height / 2), size=texture.size))
 
             # Draw outer circle
             Color(0.8, 0.8, 0.8, 1)  # Silver
