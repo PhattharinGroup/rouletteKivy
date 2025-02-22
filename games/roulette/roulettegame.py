@@ -11,6 +11,7 @@ class GameLayout(BoxLayout):
 
     def setup(self):
         self.wheel = wheel.PieWheel()
+        self.wheel.set_speed(10)  # Set the desired speed here
         self.add_widget(self.wheel)
         
         self.spin_button = spinButton.SpinButton()

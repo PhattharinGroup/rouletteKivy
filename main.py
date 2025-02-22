@@ -1,6 +1,6 @@
 from kivy.app import App
 from kivy.core.window import Window
-from roulettegame import GameLayout
+from games.roulette.roulettegame import GameLayout
 
 class MyApp(App):
     def build(self):
