@@ -31,9 +31,14 @@ class GameScreenManager(ScreenManager):
     """Manages different game screens."""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.add_widget(MenuScreen(name='menu'))
-        self.add_widget(RouletteScreen(name='roulette'))
-        self.add_widget(BlackjackScreen(name='blackjack'))
+        
+        menu_screen = MenuScreen(name='menu')
+        roulette_screen = RouletteScreen(name='roulette')
+        blackjack_screen = BlackjackScreen(name='blackjack')
+        
+        self.add_widget(menu_screen)
+        self.add_widget(roulette_screen)
+        self.add_widget(blackjack_screen)
 
 class MainApp(App):
     """Main application class."""

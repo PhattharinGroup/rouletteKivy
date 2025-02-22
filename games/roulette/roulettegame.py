@@ -1,6 +1,6 @@
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 import games.roulette.wheel as wheel
-import games.roulette.spinButton as spinButton
 
 class GameLayout(BoxLayout):
     def __init__(self, **kwargs):
@@ -8,12 +8,23 @@ class GameLayout(BoxLayout):
         self.orientation = 'vertical'
         self.spacing = 10
         self.padding = 10
+        
+        # Create the wheel
+        self.roulette_wheel = wheel.RouletteWheel()
+        self.add_widget(self.roulette_wheel)
+        
+        # Create and add spin button
+        self.spin_button = Button(
+            text='SPIN!',
+            size_hint=(1, 0.2),  # Full width, 20% height
+            background_color=(0, 0.7, 0, 1)  # Green color
+        )
+        self.spin_button.bind(on_press=self.on_spin)
+        self.add_widget(self.spin_button)
+    
+    def on_spin(self, instance):
+        """Handle spin button press"""
+        self.roulette_wheel.spin()
 
     def setup(self):
-        self.wheel = wheel.PieWheel()
-        self.wheel.set_speed(10)  # Set the desired speed here
-        self.add_widget(self.wheel)
-        
-        self.spin_button = spinButton.SpinButton()
-        self.spin_button.wheel = self.wheel
-        self.add_widget(self.spin_button)
+        pass
