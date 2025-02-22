@@ -1,0 +1,63 @@
+#:kivy 2.0.0
+
+<GameScreenManager>:
+    id: screen_manager
+    MenuScreen:
+    RouletteScreen:
+    BlackjackScreen:
+
+<MenuScreen>:
+    name: 'menu'
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 20
+        padding: 50
+
+        Label:
+            text: 'Casino Games'
+            font_size: 48
+            color: 1, 0.8, 0, 1
+
+        Button:
+            text: 'Roulette'
+            font_size: 32
+            background_color: 0.8, 0, 0, 1
+            on_press: app.root.current = 'roulette'
+
+        Button:
+            text: 'Blackjack'
+            font_size: 32
+            background_color: 0, 0.6, 0, 1
+            on_press: app.root.current = 'blackjack'
+
+        Button:
+            text: 'Exit'
+            font_size: 32
+            background_color: 0.5, 0.5, 0.5, 1
+            on_press: app.stop()
+
+<RouletteScreen>:
+    name: 'roulette'
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: 0.9  # Allocate more space for the game
+            # Add game widgets here
+        Button:
+            text: 'Back to Menu'
+            size_hint_y: 0.1
+            background_color: 0.3, 0.3, 0.3, 1
+            on_press: app.root.current = 'menu'
+
+<BlackjackScreen>:
+    name: 'blackjack'
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: 0.9  # Allocate more space for the game
+            # Add game widgets here
+        Button:
+            text: 'Back to Menu'
+            size_hint_y: 0.1
+            background_color: 0.3, 0.3, 0.3, 1
+            on_press: app.root.current = 'menu'

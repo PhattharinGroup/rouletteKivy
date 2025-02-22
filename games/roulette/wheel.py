@@ -114,7 +114,6 @@ class PieWheel(Widget):
                       content=Label(text=f'The ball landed on: {self.result}'),
                       size_hint=(0.6, 0.4))
         popup.open()
-
     def determine_result(self):
         """Determine the result based on the final angle of the wheel."""
         segment_size = 360 / len(self.numbers)
