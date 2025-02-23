@@ -4,7 +4,7 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 import random
 
-class GameLayout(BoxLayout):
+class BlackjackGameLayout(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.orientation = 'vertical'
@@ -17,6 +17,15 @@ class GameLayout(BoxLayout):
 
         self.start_button = Button(text='Start Game', on_press=self.start_game)
         self.add_widget(self.start_button)
+
+        # Add Hit and Stand buttons
+        self.hit_button = Button(text='Hit', on_press=self.hit)
+        self.add_widget(self.hit_button)
+
+        self.stand_button = Button(text='Stand', on_press=self.stand)
+        self.add_widget(self.stand_button)
+
+        self.setup_called = False  # ตัวแปรตรวจสอบว่า setup ถูกเรียกหรือยัง
 
     def create_deck(self):
         """Create a standard deck of cards."""
@@ -31,6 +40,13 @@ class GameLayout(BoxLayout):
         self.player_hand = [self.deck.pop(), self.deck.pop()]
         self.dealer_hand = [self.deck.pop(), self.deck.pop()]
         self.update_info()
+
+    def setup(self):
+        """Set up the game (e.g., create a new deck, shuffle, etc.)."""
+        if not self.setup_called:
+            print("Setting up the game...")
+            self.deck = self.create_deck()  # สร้างสำรับใหม่
+            self.setup_called = True  # ตั้งค่าเรียบร้อยแล้ว
 
     def update_info(self):
         """Update the game information displayed to the player."""
@@ -69,3 +85,33 @@ class GameLayout(BoxLayout):
         """Handle the player hitting (drawing a card)."""
         self.player_hand.append(self.deck.pop())
         self.update_info()
+
+    def stand(self, instance):
+        """Handle the player standing."""
+        self.update_info()
+        # Implement dealer's actions and compare scores
+        dealer_score = self.calculate_score(self.dealer_hand)
+        if dealer_score < 17:
+            self.dealer_hand.append(self.deck.pop())
+            self.update_info()
+
+        self.check_winner()
+
+    def check_winner(self):
+        """Check who wins the game."""
+        player_score = self.calculate_score(self.player_hand)
+        dealer_score = self.calculate_score(self.dealer_hand)
+        if player_score > 21:
+            result = "Player Busts! Dealer Wins!"
+        elif dealer_score > 21:
+            result = "Dealer Busts! Player Wins!"
+        elif player_score > dealer_score:
+            result = "Player Wins!"
+        elif dealer_score > player_score:
+            result = "Dealer Wins!"
+        else:
+            result = "It's a Tie!"
+        
+        # Show result in a popup
+        popup = Popup(title="Game Over", content=Label(text=result), size_hint=(0.6, 0.4))
+        popup.open()

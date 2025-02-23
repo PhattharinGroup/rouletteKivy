@@ -1,11 +1,3 @@
-#:kivy 2.0.0
-
-<GameScreenManager>:
-    id: screen_manager
-    MenuScreen:
-    RouletteScreen:
-    BlackjackScreen:
-
 <MenuScreen>:
     name: 'menu'
     BoxLayout:
@@ -22,18 +14,24 @@
             text: 'Roulette'
             font_size: 32
             background_color: 0.8, 0, 0, 1
+            size_hint: None, None  # กำหนดขนาดแบบตายตัว
+            size: 300, 100  # กำหนดขนาดของปุ่ม
             on_press: app.root.current = 'roulette'
 
         Button:
             text: 'Blackjack'
             font_size: 32
             background_color: 0, 0.6, 0, 1
+            size_hint: None, None
+            size: 300, 100
             on_press: app.root.current = 'blackjack'
 
         Button:
             text: 'Exit'
             font_size: 32
             background_color: 0.5, 0.5, 0.5, 1
+            size_hint: None, None
+            size: 300, 100
             on_press: app.stop()
 
 <RouletteScreen>:
@@ -45,7 +43,8 @@
             # Add game widgets here
         Button:
             text: 'Back to Menu'
-            size_hint_y: 0.1
+            size_hint: None, None
+            size: 200, 60  # ตั้งขนาดให้เหมาะสม
             background_color: 0.3, 0.3, 0.3, 1
             on_press: app.root.current = 'menu'
 
@@ -58,6 +57,7 @@
             # Add game widgets here
         Button:
             text: 'Back to Menu'
-            size_hint_y: 0.1
+            size_hint: None, None
+            size: 200, 60  # ตั้งขนาดให้เหมาะสม
             background_color: 0.3, 0.3, 0.3, 1
             on_press: app.root.current = 'menu'

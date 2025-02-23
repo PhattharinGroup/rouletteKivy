@@ -1,8 +1,8 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
-from games.roulette.roulettegame import GameLayout as RouletteGame
-from games.blackjack.blackjackgame import GameLayout as BlackjackGame
+from games.roulette.roulettegame import RouletteGameLayout as RouletteGame
+from games.blackjack.blackjackgame import BlackjackGameLayout as BlackjackGame
 
 class MenuScreen(Screen):
     """Screen for the main menu."""
