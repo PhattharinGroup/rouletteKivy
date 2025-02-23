@@ -12,18 +12,7 @@ class BlackjackGameLayout(BoxLayout):
         self.player_hand = []
         self.dealer_hand = []
 
-        self.info_label = Label(text='Welcome to Blackjack!')
-        self.add_widget(self.info_label)
-
-        self.start_button = Button(text='Start Game', on_press=self.start_game)
-        self.add_widget(self.start_button)
-
-        # Add Hit and Stand buttons
-        self.hit_button = Button(text='Hit', on_press=self.hit)
-        self.add_widget(self.hit_button)
-
-        self.stand_button = Button(text='Stand', on_press=self.stand)
-        self.add_widget(self.stand_button)
+        self.info_label = self.ids.info_label
 
         self.setup_called = False  # ตัวแปรตรวจสอบว่า setup ถูกเรียกหรือยัง
 
@@ -83,19 +72,27 @@ class BlackjackGameLayout(BoxLayout):
 
     def hit(self, instance):
         """Handle the player hitting (drawing a card)."""
+        print("Hit button pressed!")
         self.player_hand.append(self.deck.pop())
         self.update_info()
 
     def stand(self, instance):
         """Handle the player standing."""
         self.update_info()
-        # Implement dealer's actions and compare scores
+        print("Stand button pressed!")
         dealer_score = self.calculate_score(self.dealer_hand)
-        if dealer_score < 17:
+        while dealer_score < 17:
             self.dealer_hand.append(self.deck.pop())
+            dealer_score = self.calculate_score(self.dealer_hand)
             self.update_info()
 
         self.check_winner()
+
+    def deal(self, instance):
+        """Deal the initial cards to the player and dealer."""
+        self.player_hand = [self.deck.pop(), self.deck.pop()]
+        self.dealer_hand = [self.deck.pop(), self.deck.pop()]
+        self.update_info()
 
     def check_winner(self):
         """Check who wins the game."""
@@ -115,3 +112,17 @@ class BlackjackGameLayout(BoxLayout):
         # Show result in a popup
         popup = Popup(title="Game Over", content=Label(text=result), size_hint=(0.6, 0.4))
         popup.open()
+
+    def exit_game(self, instance):
+        """Handle the exit button, go back to the menu."""
+        print("Exiting the game...")
+        self.manager.current = 'menu'
+
+
+class BlackjackScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.game_layout = BlackjackGameLayout()  # Create BlackjackGameLayout instance
+        self.add_widget(self.game_layout)  # Add it to the screen
+
+

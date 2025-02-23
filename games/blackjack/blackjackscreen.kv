@@ -1,0 +1,70 @@
+<BlackjackGameLayout>:
+    orientation: 'vertical'
+    padding: [50, 50, 50, 50]  # เพิ่มขอบซ้าย ขวา และด้านบน
+    spacing: 100  # เพิ่มระยะห่างระหว่างปุ่ม
+        
+    # Label ที่จะไปอยู่ด้านบนสุด
+    Label:
+        text: "Blackjack Game"
+        font_size: 60
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5} # ทำให้ขนาดของ Label ตรงกับขนาดข้อความ
+        height: self.texture_size[1]  # ความสูงของ Label ขึ้นกับขนาดข้อความ
+        size_hint_x: None
+        width: self.texture_size[0] 
+
+    Label:
+        id: info_label
+        text: "Welcome to Blackjack!"
+        font_size: 30
+        size_hint_y: None
+        pos_hint: {"center_x": 0.5} # ทำให้ขนาดของ Label ตรงกับขนาดข้อความ
+        height: self.texture_size[1]  # ความสูงของ Label ขึ้นกับขนาดข้อความ
+        size_hint_x: None
+        width: self.texture_size[0]   # ความสูงของ Label ขึ้นกับขนาดข้อความ
+        
+    # สร้าง BoxLayout สำหรับปุ่ม
+    BoxLayout:
+        orientation: 'vertical'  # ปุ่มเรียงจากบนลงล่าง
+        size_hint_y: None
+        height: 200  # ขนาดของ BoxLayout
+        spacing: 10  # ระยะห่างระหว่างปุ่ม
+
+        # ปุ่ม Deal
+        Button:
+            text: 'Deal'
+            font_size: 24
+            size_hint: None, None
+            size: 250, 60
+            pos_hint: {"center_x": 0.5}
+            background_color: 0, 0.6, 0, 1
+            on_press: root.deal(None)
+
+        # ปุ่ม Hit
+        Button:
+            text: 'Hit'
+            font_size: 24
+            size_hint: None, None
+            size: 250, 60
+            pos_hint: {"center_x": 0.5}
+            background_color: 0.7, 0, 0, 1
+            on_press: root.hit(None)
+
+        # ปุ่ม Stand
+        Button:
+            text: 'Stand'
+            font_size: 24
+            size_hint: None, None
+            size: 250, 60
+            pos_hint: {"center_x": 0.5}
+            background_color: 0, 0.6, 0, 1
+            on_press: root.stand(None)
+
+        # ปุ่ม Back to Menu
+        Button:
+            text: 'Back to Menu'
+            size_hint: None, None
+            size: 250, 60
+            pos_hint: {"center_x": 0.5}
+            background_color: 0.3, 0.3, 0.3, 1
+            on_press: app.root.current = 'menu'

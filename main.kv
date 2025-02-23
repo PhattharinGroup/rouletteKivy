@@ -2,41 +2,52 @@
     name: 'menu'
     BoxLayout:
         orientation: 'vertical'
-        spacing: 20  # ระยะห่างระหว่างปุ่ม
-        padding: [50, 100, 50, 50]  # ขอบซ้าย ขอบบน ขอบขวา ขอบล่าง (เพิ่มระยะห่างด้านบน 100)
+        spacing: 30  # ระยะห่างระหว่างปุ่ม
+        padding: [50, 50, 50, 50]  # ขอบซ้าย ขอบบน ขอบขวา ขอบล่าง (เพิ่มระยะห่างด้านบน 100)
 
         Label:
             text: 'Casino Games'
             font_size: 48
             color: 1, 0.8, 0, 1
             size_hint_y: None  # ปรับขนาดให้คงที่
-            pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
             height: self.texture_size[1]  # ใช้ขนาดของข้อความ
             size_hint_x: None
             width: self.texture_size[0]
+            pos_hint: {"center_x": 0.5}  # ทำให้ป้ายอยู่ตรงกลาง
 
         Widget:
             size_hint_y: None
-            height: 100  # เพิ่มช่องว่างด้านบนระหว่างโลโก้และปุ่ม
+            height: 50  # เพิ่มช่องว่างระหว่างโลโก้และปุ่ม
 
-        Button:
-            text: 'Roulette'
-            font_size: 32
-            background_color: 0.8, 0, 0, 1
-            size_hint: None, None  # กำหนดขนาดปุ่ม
-            size: 300, 80
-            pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
-            on_press: app.root.current = 'roulette'
+        # BoxLayout for buttons (Horizontal alignment)
+        BoxLayout:
+            orientation: 'vertical'  # เปลี่ยนเป็นจัดปุ่มจากบนลงล่าง
+            size_hint_y: None
+            height: 150  # ขนาดของ BoxLayout
+            spacing: 20  # ระยะห่างระหว่างปุ่ม
+            pos_hint: {"center_x": 0.5}
 
-        Button:
-            text: 'Blackjack'
-            font_size: 32
-            background_color: 0, 0.6, 0, 1
-            size_hint: None, None
-            size: 300, 80
-            pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
-            on_press: app.root.current = 'blackjack'
+            # ปุ่ม Roulette
+            Button:
+                text: 'Roulette'
+                font_size: 32
+                background_color: 0.8, 0, 0, 1
+                size_hint: None, None  # กำหนดขนาดปุ่ม
+                size: 300, 80
+                pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
+                on_press: app.root.current = 'roulette'
 
+            # ปุ่ม Blackjack
+            Button:
+                text: 'Blackjack'
+                font_size: 32
+                background_color: 0, 0.6, 0, 1
+                size_hint: None, None
+                size: 300, 80
+                pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
+                on_press: app.root.current = 'blackjack'
+
+        # ปุ่ม Exit
         Button:
             text: 'Exit'
             font_size: 32
@@ -48,21 +59,6 @@
 
 <RouletteScreen>:
     name: 'roulette'
-    BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            size_hint_y: 0.9  # Allocate more space for the game
-            # Add game widgets here
-        Button:
-            text: 'Back to Menu'
-            size_hint: None, None
-            size: 200, 60  # ปรับขนาดให้เหมาะสม
-            background_color: 0.3, 0.3, 0.3, 1
-            pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
-            on_press: app.root.current = 'menu'
-
-<BlackjackScreen>:
-    name: 'blackjack'
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:

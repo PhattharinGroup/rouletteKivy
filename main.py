@@ -1,8 +1,10 @@
 from kivy.app import App
+from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from games.roulette.roulettegame import RouletteGameLayout as RouletteGame
 from games.blackjack.blackjackgame import BlackjackGameLayout as BlackjackGame
+
 
 class MenuScreen(Screen):
     """Screen for the main menu."""
@@ -22,6 +24,7 @@ class BlackjackScreen(Screen):
     """Screen for the Blackjack game."""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        Builder.load_file('games/blackjack/blackjackscreen.kv')
         layout = BoxLayout(orientation='vertical')
         self.game = BlackjackGame()
         layout.add_widget(self.game)
