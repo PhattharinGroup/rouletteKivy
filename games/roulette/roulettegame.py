@@ -1,7 +1,7 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 import games.roulette.wheel as wheel
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivy.properties import ObjectProperty
 from kivy.clock import Clock
 
@@ -21,21 +21,21 @@ class RouletteGameLayout(Screen):
         self.layout.add_widget(self.roulette_wheel)
         
         buttons_layout = BoxLayout(
-            orientation='horizontal',
+            orientation='vertical',
             size_hint=(1, 0.2),
             spacing=10
         )
         
         self.spin_button = Button(
             text='SPIN!',
-            size_hint=(0.7, 1),
+            size_hint=(1, 1),
             background_color=(0, 0.7, 0, 1)
         )
         self.spin_button.bind(on_press=self.on_spin)
         
         exit_button = Button(
             text='EXIT',
-            size_hint=(0.3, 1),
+            size_hint=(1, 1),
             background_color=(0.7, 0, 0, 1)
         )
         exit_button.bind(on_press=lambda x: self.exit_game())
@@ -68,7 +68,7 @@ class RouletteGameLayout(Screen):
     def on_spin(self, instance):
         self.spin_button.disabled = True
         self.roulette_wheel.spin()
-        Clock.schedule_once(self.enable_spin_button, 5)  # Enable after 5 seconds
+        Clock.schedule_once(self.enable_spin_button, 5)
 
     def enable_spin_button(self, dt):
         self.spin_button.disabled = False

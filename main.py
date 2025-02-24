@@ -7,11 +7,11 @@ from games.blackjack.blackjackgame import BlackjackGameLayout as BlackjackGame
 
 
 class MenuScreen(Screen):
-    """Screen for the main menu."""
+    # main menu screen
     pass
 
 class RouletteScreen(Screen):
-    """Screen for the Roulette game."""
+    # roulette game
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         layout = BoxLayout(orientation='vertical')
@@ -21,7 +21,7 @@ class RouletteScreen(Screen):
         self.add_widget(layout)
 
 class BlackjackScreen(Screen):
-    """Screen for the Blackjack game."""
+    # blackjack game
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Builder.load_file('games/blackjack/blackjackscreen.kv')
@@ -31,7 +31,7 @@ class BlackjackScreen(Screen):
         self.add_widget(layout)
 
 class GameScreenManager(ScreenManager):
-    """Manages different game screens."""
+    # transitions
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
@@ -46,7 +46,6 @@ class GameScreenManager(ScreenManager):
         self.add_widget(blackjack_screen)
 
 class MainApp(App):
-    """Main application class."""
     def build(self):
         return GameScreenManager()
 
