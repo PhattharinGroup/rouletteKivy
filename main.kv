@@ -56,18 +56,3 @@
             size: 300, 80
             pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
             on_press: app.stop()
-
-<RouletteScreen>:
-    name: 'roulette'
-    BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            size_hint_y: 0.9  # Allocate more space for the game
-            # Add game widgets here
-        Button:
-            text: 'Back to Menu'
-            size_hint: None, None
-            size: 200, 60  # ปรับขนาดให้เหมาะสม
-            background_color: 0.3, 0.3, 0.3, 1
-            pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
-            on_press: app.root.current = 'menu'

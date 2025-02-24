@@ -113,10 +113,21 @@ class BlackjackGameLayout(BoxLayout):
         popup = Popup(title="Game Over", content=Label(text=result), size_hint=(0.6, 0.4))
         popup.open()
 
-    def exit_game(self, instance):
+
+    def exit_game(self):
         """Handle the exit button, go back to the menu."""
         print("Exiting the game...")
-        self.manager.current = 'menu'
+        # Get the parent screen manager if manager property is not set
+        if not self.manager:
+            self.manager = self.parent
+        
+        if self.manager:
+            print("Transitioning to menu screen...")
+            self.manager.transition.direction = 'right'  # Optional: adds slide animation
+            self.manager.current = 'menu'
+        else:
+            print("Warning: No screen manager found")
+        self.setup_called = False
 
 
 class BlackjackScreen(BoxLayout):

@@ -37,8 +37,10 @@ class GameScreenManager(ScreenManager):
         
         menu_screen = MenuScreen(name='menu')
         roulette_screen = RouletteScreen(name='roulette')
+        roulette_screen.game.manager = self
         blackjack_screen = BlackjackScreen(name='blackjack')
-        
+        blackjack_screen.game.manager = self
+
         self.add_widget(menu_screen)
         self.add_widget(roulette_screen)
         self.add_widget(blackjack_screen)
