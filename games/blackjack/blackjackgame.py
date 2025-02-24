@@ -34,8 +34,8 @@ class BlackjackGameLayout(BoxLayout):
         """Set up the game (e.g., create a new deck, shuffle, etc.)."""
         if not self.setup_called:
             print("Setting up the game...")
-            self.deck = self.create_deck()  # สร้างสำรับใหม่
-            self.setup_called = True  # ตั้งค่าเรียบร้อยแล้ว
+            self.deck = self.create_deck()
+            self.setup_called = True
 
     def update_info(self):
         """Update the game information displayed to the player."""
@@ -89,13 +89,13 @@ class BlackjackGameLayout(BoxLayout):
         self.check_winner()
 
     def deal(self, instance):
-        """Deal the initial cards to the player and dealer."""
+        #init deal
         self.player_hand = [self.deck.pop(), self.deck.pop()]
         self.dealer_hand = [self.deck.pop(), self.deck.pop()]
         self.update_info()
 
     def check_winner(self):
-        """Check who wins the game."""
+        #result check
         player_score = self.calculate_score(self.player_hand)
         dealer_score = self.calculate_score(self.dealer_hand)
         if player_score > 21:
@@ -115,15 +115,12 @@ class BlackjackGameLayout(BoxLayout):
 
 
     def exit_game(self):
-        """Handle the exit button, go back to the menu."""
-        print("Exiting the game...")
         # Get the parent screen manager if manager property is not set
         if not self.manager:
             self.manager = self.parent
         
         if self.manager:
-            print("Transitioning to menu screen...")
-            self.manager.transition.direction = 'right'  # Optional: adds slide animation
+            self.manager.transition.direction = 'down'
             self.manager.current = 'menu'
         else:
             print("Warning: No screen manager found")

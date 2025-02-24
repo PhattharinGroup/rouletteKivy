@@ -6,7 +6,7 @@
         padding: [50, 50, 50, 50]  # ขอบซ้าย ขอบบน ขอบขวา ขอบล่าง (เพิ่มระยะห่างด้านบน 100)
 
         Label:
-            text: 'Casino Games'
+            text: 'Welcome to Panan Online'
             font_size: 48
             color: 1, 0.8, 0, 1
             size_hint_y: None  # ปรับขนาดให้คงที่
@@ -34,8 +34,10 @@
                 background_color: 0.8, 0, 0, 1
                 size_hint: None, None  # กำหนดขนาดปุ่ม
                 size: 300, 80
-                pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
-                on_press: app.root.current = 'roulette'
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
+                on_press: 
+                    root.manager.transition.direction = "left"
+                    app.root.current = 'roulette'
 
             # ปุ่ม Blackjack
             Button:
@@ -44,9 +46,11 @@
                 background_color: 0, 0.6, 0, 1
                 size_hint: None, None
                 size: 300, 80
-                pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
-                on_press: app.root.current = 'blackjack'
-
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
+                on_press: 
+                    root.manager.transition.direction = "left"
+                    app.root.current = 'blackjack'
+                    
         # ปุ่ม Exit
         Button:
             text: 'Exit'

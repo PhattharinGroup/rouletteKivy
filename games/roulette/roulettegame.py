@@ -51,7 +51,7 @@ class RouletteGameLayout(Screen):
             self.manager = self.parent
         
         if self.manager:
-            self.manager.transition.direction = 'right'
+            self.manager.transition.direction = 'up'
             self.manager.current = 'menu'
         self.setup_called = False
 
