@@ -1,7 +1,7 @@
 <MenuScreen>:
     canvas.before:
         Color:
-            rgba: 0.1, 0.1, 0.1, 1
+            rgba: 0.1, 0.1, 0.1, 1  # สีพื้นหลังเข้ม
         Rectangle:
             pos: self.pos
             size: self.size
@@ -10,79 +10,58 @@
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(20)
-        size_hint: None, None
-        size: self.parent.size  # ใช้ขนาดของพาเรนต์เพื่อให้ขนาดเท่ากัน
-        pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # ทำให้กล่องทั้งหมดอยู่กลาง
-
-        Widget:
-            size_hint_y: 0.2
+        size_hint: (1, 1)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
         MDLabel:
             text: 'Panan Online'
-            font_size: min(root.width * 0.1, dp(100))
-            theme_text_color: "Custom"
+            font_style: 'H2'
+            halign: 'center'
+            theme_text_color: 'Custom'
             text_color: 1, 0.8, 0, 1
             size_hint_y: None
-            height: dp(120)
-            font_style: "H5"
-            halign: 'center'
-            valign: 'middle'  # ให้ข้อความอยู่กลางทั้งในแนวตั้งและแนวนอน
+            height: self.texture_size[1]
 
         Widget:
-            size_hint_y: 0.1
+            size_hint_y: None
+            height: dp(30)  # Adjust the height as needed
 
-        MDGridLayout:
-            cols: 1
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint: (1, None)
+            height: dp(300)
             spacing: dp(20)
-            size_hint: (None, None)
-            height: dp(340)
-            width: dp(280)  # ตั้งขนาดความกว้างให้ตรงกัน
-            pos_hint: {'center_x': 0.5}  # ตั้งให้กริดอยู่กลาง
+            padding: dp(50), 0
+            pos_hint: {'center_x': 0.5}
 
-            MDCard:
-                size_hint: (None, None)
-                size: "280dp", "60dp"
-                elevation: 10
-                radius: [15,]
-                padding: [10,]
+            MDRaisedButton:
+                text: 'Roulette'
+                pos_hint: {'center_x': 0.5}
+                size_hint: (0.8, None)
+                height: dp(50)
+                font_size: dp(18)
+                md_bg_color: 0.2, 0.6, 0.86, 1  # สีฟ้า
                 on_release:
                     root.manager.transition.direction = 'left'
                     app.root.current = 'roulette'
-                MDFlatButton:
-                    text: 'Roulette'
-                    font_size: min(self.width * 0.15, dp(35))
-                    size_hint_y: None
-                    height: dp(50)
 
-            MDCard:
-                size_hint: (None, None)
-                size: "280dp", "60dp"
-                elevation: 10
-                radius: [15,]
-                padding: [10,]
+            MDRaisedButton:
+                text: 'Blackjack'
+                pos_hint: {'center_x': 0.5}
+                size_hint: (0.8, None)
+                height: dp(50)
+                font_size: dp(18)
+                md_bg_color: 0.2, 0.6, 0.86, 1  # สีฟ้า
                 on_release:
                     root.manager.transition.direction = 'left'
                     app.root.current = 'blackjack'
-                MDFlatButton:
-                    text: 'Blackjack'
-                    font_size: min(self.width * 0.15, dp(35))
-                    size_hint_y: None
-                    height: dp(50)
 
-            MDCard:
-                size_hint: (None, None)
-                size: "280dp", "60dp"
-                elevation: 10
-                radius: [15,]
-                padding: [10,]
+            MDRaisedButton:
+                text: 'Exit'
+                pos_hint: {'center_x': 0.5}
+                size_hint: (0.8, None)
+                height: dp(50)
+                font_size: dp(18)
+                md_bg_color: 1, 0, 0, 1  # สีแดง
                 on_release:
                     app.stop()
-                MDIconButton:
-                    icon: 'exit-to-app'
-                    theme_text_color: 'Custom'
-                    text_color: 1, 0, 0, 1
-                    size_hint_y: None
-                    height: dp(50)
-
-        Widget:
-            size_hint_y: 0.2

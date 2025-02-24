@@ -38,20 +38,15 @@ class GameScreenManager(MDScreenManager):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
-        menu_screen = MenuScreen(name='menu')
-        roulette_screen = RouletteScreen(name='roulette')
-        roulette_screen.game.manager = self
-        blackjack_screen = BlackjackScreen(name='blackjack')
-        blackjack_screen.game.manager = self
-
-        self.add_widget(menu_screen)
-        self.add_widget(roulette_screen)
-        self.add_widget(blackjack_screen)
+        self.add_widget(MenuScreen(name='menu'))
+        self.add_widget(RouletteScreen(name='roulette'))
+        self.add_widget(BlackjackScreen(name='blackjack'))
 
 class MainApp(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Blue"  # ตั้งธีมหลักเป็นสีฟ้า
         self.theme_cls.accent_palette = "Orange"  # ตั้งธีมเสริมเป็นสีส้ม
+        Builder.load_file('main.kv')
         return GameScreenManager()
 
 if __name__ == '__main__':
