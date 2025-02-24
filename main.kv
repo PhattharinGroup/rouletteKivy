@@ -1,62 +1,70 @@
 <MenuScreen>:
-    name: 'menu'
+    canvas.before:
+        Color:
+            rgba: 0.1, 0.1, 0.1, 1 
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     BoxLayout:
         orientation: 'vertical'
-        spacing: 30  # ระยะห่างระหว่างปุ่ม
-        padding: [50, 50, 50, 50]  # ขอบซ้าย ขอบบน ขอบขวา ขอบล่าง (เพิ่มระยะห่างด้านบน 100)
-
-        Label:
-            text: 'Welcome to Panan Online'
-            font_size: 48
-            color: 1, 0.8, 0, 1
-            size_hint_y: None  # ปรับขนาดให้คงที่
-            height: self.texture_size[1]  # ใช้ขนาดของข้อความ
-            size_hint_x: None
-            width: self.texture_size[0]
-            pos_hint: {"center_x": 0.5}  # ทำให้ป้ายอยู่ตรงกลาง
+        padding: dp(20)  # Fixed padding to reduce calculations
+        spacing: dp(20)
 
         Widget:
-            size_hint_y: None
-            height: 50  # เพิ่มช่องว่างระหว่างโลโก้และปุ่ม
+            size_hint_y: 0.2
 
-        # BoxLayout for buttons (Horizontal alignment)
+        Label:
+            text: 'Panan Online'
+            font_size: min(root.width * 0.1, dp(100))
+            color: 1, 0.8, 0, 1
+            size_hint_y: None
+            height: dp(120)
+            bold: True
+            pos_hint: {'center_x': 0.5}
+        
+        Widget:
+            size_hint_y: 0.1
+
+        # Button container with fixed size hints
         BoxLayout:
-            orientation: 'vertical'  # เปลี่ยนเป็นจัดปุ่มจากบนลงล่าง
-            size_hint_y: None
-            height: 150  # ขนาดของ BoxLayout
-            spacing: 20  # ระยะห่างระหว่างปุ่ม
-            pos_hint: {"center_x": 0.5}
+            orientation: 'vertical'
+            spacing: dp(20)
+            size_hint: (0.45, None)  # Reduced from 0.6 to 0.45 (15% smaller)
+            height: dp(340)  # Reduced from 400 to 340 (15% smaller)
+            pos_hint: {'center_x': 0.5}
 
-            # ปุ่ม Roulette
+            # Game buttons with consistent sizing
             Button:
                 text: 'Roulette'
-                font_size: 32
-                background_color: 0.8, 0, 0, 1
-                size_hint: None, None  # กำหนดขนาดปุ่ม
-                size: 300, 80
-                pos_hint: {"center_x": 0.5, "center_y": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
+                font_size: min(self.width * 0.15, dp(35))  # Reduced from 40 to 35
+                background_color: 0.2, 0.2, 0.2, 1
+                background_normal: ''
+                size_hint_y: 0.3
+                pos_hint: {'center_x': 0.5}
                 on_press: 
-                    root.manager.transition.direction = "left"
+                    root.manager.transition.direction = 'left'
                     app.root.current = 'roulette'
 
-            # ปุ่ม Blackjack
             Button:
                 text: 'Blackjack'
-                font_size: 32
-                background_color: 0, 0.6, 0, 1
-                size_hint: None, None
-                size: 300, 80
-                pos_hint: {"center_x": 0.5, "center_y": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
+                font_size: min(self.width * 0.15, dp(35))
+                background_color: 0.2, 0.2, 0.2, 1
+                background_normal: ''
+                size_hint_y: 0.3
+                pos_hint: {'center_x': 0.5}
                 on_press: 
-                    root.manager.transition.direction = "left"
+                    root.manager.transition.direction = 'left'
                     app.root.current = 'blackjack'
-                    
-        # ปุ่ม Exit
-        Button:
-            text: 'Exit'
-            font_size: 32
-            background_color: 0.5, 0.5, 0.5, 1
-            size_hint: None, None
-            size: 300, 80
-            pos_hint: {"center_x": 0.5}  # ทำให้ปุ่มอยู่ตรงกลาง
-            on_press: app.stop()
+
+            Button:
+                text: 'Quit Game'
+                font_size: min(self.width * 0.15, dp(35))
+                background_color: 0.2, 0.2, 0.2, 1
+                background_normal: ''
+                size_hint_y: 0.3
+                pos_hint: {'center_x': 0.5}
+                on_press: app.stop()
+
+        Widget:
+            size_hint_y: 0.2
