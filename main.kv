@@ -1,70 +1,88 @@
 <MenuScreen>:
     canvas.before:
         Color:
-            rgba: 0.1, 0.1, 0.1, 1 
+            rgba: 0.1, 0.1, 0.1, 1
         Rectangle:
             pos: self.pos
             size: self.size
 
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
-        padding: dp(20)  # Fixed padding to reduce calculations
+        padding: dp(20)
         spacing: dp(20)
+        size_hint: None, None
+        size: self.parent.size  # ใช้ขนาดของพาเรนต์เพื่อให้ขนาดเท่ากัน
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # ทำให้กล่องทั้งหมดอยู่กลาง
 
         Widget:
             size_hint_y: 0.2
 
-        Label:
+        MDLabel:
             text: 'Panan Online'
             font_size: min(root.width * 0.1, dp(100))
-            color: 1, 0.8, 0, 1
+            theme_text_color: "Custom"
+            text_color: 1, 0.8, 0, 1
             size_hint_y: None
             height: dp(120)
-            bold: True
-            pos_hint: {'center_x': 0.5}
-        
+            font_style: "H5"
+            halign: 'center'
+            valign: 'middle'  # ให้ข้อความอยู่กลางทั้งในแนวตั้งและแนวนอน
+
         Widget:
             size_hint_y: 0.1
 
-        # Button container with fixed size hints
-        BoxLayout:
-            orientation: 'vertical'
+        MDGridLayout:
+            cols: 1
             spacing: dp(20)
-            size_hint: (0.45, None)  # Reduced from 0.6 to 0.45 (15% smaller)
-            height: dp(340)  # Reduced from 400 to 340 (15% smaller)
-            pos_hint: {'center_x': 0.5}
+            size_hint: (None, None)
+            height: dp(340)
+            width: dp(280)  # ตั้งขนาดความกว้างให้ตรงกัน
+            pos_hint: {'center_x': 0.5}  # ตั้งให้กริดอยู่กลาง
 
-            # Game buttons with consistent sizing
-            Button:
-                text: 'Roulette'
-                font_size: min(self.width * 0.15, dp(35))  # Reduced from 40 to 35
-                background_color: 0.2, 0.2, 0.2, 1
-                background_normal: ''
-                size_hint_y: 0.3
-                pos_hint: {'center_x': 0.5}
-                on_press: 
+            MDCard:
+                size_hint: (None, None)
+                size: "280dp", "60dp"
+                elevation: 10
+                radius: [15,]
+                padding: [10,]
+                on_release:
                     root.manager.transition.direction = 'left'
                     app.root.current = 'roulette'
+                MDFlatButton:
+                    text: 'Roulette'
+                    font_size: min(self.width * 0.15, dp(35))
+                    size_hint_y: None
+                    height: dp(50)
 
-            Button:
-                text: 'Blackjack'
-                font_size: min(self.width * 0.15, dp(35))
-                background_color: 0.2, 0.2, 0.2, 1
-                background_normal: ''
-                size_hint_y: 0.3
-                pos_hint: {'center_x': 0.5}
-                on_press: 
+            MDCard:
+                size_hint: (None, None)
+                size: "280dp", "60dp"
+                elevation: 10
+                radius: [15,]
+                padding: [10,]
+                on_release:
                     root.manager.transition.direction = 'left'
                     app.root.current = 'blackjack'
+                MDFlatButton:
+                    text: 'Blackjack'
+                    font_size: min(self.width * 0.15, dp(35))
+                    size_hint_y: None
+                    height: dp(50)
 
-            Button:
-                text: 'Quit Game'
-                font_size: min(self.width * 0.15, dp(35))
-                background_color: 0.2, 0.2, 0.2, 1
-                background_normal: ''
-                size_hint_y: 0.3
-                pos_hint: {'center_x': 0.5}
-                on_press: app.stop()
+            MDCard:
+                size_hint: (None, None)
+                size: "280dp", "60dp"
+                elevation: 10
+                radius: [15,]
+                padding: [10,]
+                on_release:
+                    app.stop()
+                MDIconButton:
+                    icon: 'exit-to-app'
+                    theme_text_color: 'Custom'
+                    text_color: 1, 0, 0, 1
+                    size_hint_y: None
+                    height: dp(50)
 
         Widget:
             size_hint_y: 0.2

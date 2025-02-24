@@ -32,10 +32,10 @@ class BlackjackGameLayout(BoxLayout):
 
     def setup(self):
         """Set up the game (e.g., create a new deck, shuffle, etc.)."""
-        if not self.setup_called:
-            print("Setting up the game...")
-            self.deck = self.create_deck()
-            self.setup_called = True
+        print("Setting up the game...")
+        self.deck = self.create_deck()  # สร้างสำรับใหม่
+        self.setup_called = True  # ตั้งค่าการ setup ว่าทำแล้ว
+
 
     def update_info(self):
         """Update the game information displayed to the player."""
@@ -70,11 +70,29 @@ class BlackjackGameLayout(BoxLayout):
         """Convert a hand to a string representation."""
         return ', '.join([f'{card["rank"]} of {card["suit"]}' for card in hand])
 
+    def deal(self, instance):
+        # ถ้า deck หมด
+        if not self.deck:
+            print("Deck is empty! Setting up a new deck...")
+            self.setup()  # รีเซ็ตสำรับใหม่
+        
+        # แจกไพ่
+        self.player_hand = [self.deck.pop(), self.deck.pop()]
+        self.dealer_hand = [self.deck.pop(), self.deck.pop()]
+        self.update_info()
+
     def hit(self, instance):
         """Handle the player hitting (drawing a card)."""
         print("Hit button pressed!")
-        self.player_hand.append(self.deck.pop())
+        
+        # ถ้า deck หมด
+        if not self.deck:
+            print("Deck is empty! Setting up a new deck...")
+            self.setup()  # รีเซ็ตสำรับใหม่
+        
+        self.player_hand.append(self.deck.pop())  # จั่วไพ่
         self.update_info()
+
 
     def stand(self, instance):
         """Handle the player standing."""
@@ -87,12 +105,6 @@ class BlackjackGameLayout(BoxLayout):
             self.update_info()
 
         self.check_winner()
-
-    def deal(self, instance):
-        #init deal
-        self.player_hand = [self.deck.pop(), self.deck.pop()]
-        self.dealer_hand = [self.deck.pop(), self.deck.pop()]
-        self.update_info()
 
     def check_winner(self):
         #result check
