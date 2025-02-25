@@ -1,72 +1,113 @@
 <BlackjackGameLayout>:
-    orientation: 'vertical'
-    padding: [50, 50, 50, 50]  # เพิ่มขอบซ้าย ขวา และด้านบน
-    spacing: 100  # เพิ่มระยะห่างระหว่างปุ่ม
-        
-    # Label ที่จะไปอยู่ด้านบนสุด
-    Label:
-        text: "Blackjack Game"
-        font_size: 60
-        size_hint_y: None
-        pos_hint: {"center_x": 0.5} # ทำให้ขนาดของ Label ตรงกับขนาดข้อความ
-        height: self.texture_size[1]  # ความสูงของ Label ขึ้นกับขนาดข้อความ
-        size_hint_x: None
-        width: self.texture_size[0] 
+    canvas.before:
+        Color:
+            rgba: 0.8, 0.8, 0.8, 1  # สีพื้นหลังเทา
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'assets/background.png'  
 
-    Label:
+    orientation: 'vertical'
+    spacing: dp(20)
+    size_hint: None, None
+    width: dp(800)  
+    height: dp(600)
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+    MDLabel:
+        text: "Blackjack Game"
+        font_style: "H3"
+        halign: "center"
+        size_hint_y: None
+        height: dp(50)
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint: None, None
+        size: dp(600), dp(250)
+        spacing: dp(10)
+        pos_hint: {"center_x": 0.5}
+
+        MDLabel:
+            text: "Dealer's Cards"
+            font_style: "H5"
+            halign: "center"
+            size_hint_y: None
+            height: dp(30)
+
+        MDBoxLayout:
+            id: dealer_cards
+            orientation: 'horizontal'
+            size_hint: None, None
+            size: dp(600), dp(120)
+            spacing: dp(10)
+            pos_hint: {"center_x": 0.5}
+
+        MDLabel:
+            text: "Player's Cards"
+            font_style: "H5"
+            halign: "center"
+            size_hint_y: None
+            height: dp(30)
+
+        MDBoxLayout:
+            id: player_cards
+            orientation: 'horizontal'
+            size_hint: None, None
+            size: dp(600), dp(120)
+            spacing: dp(10)
+            pos_hint: {"center_x": 0.5}
+
+    MDLabel:
         id: info_label
         text: "Welcome to Blackjack!"
-        font_size: 30
+        font_style: "H5"
+        halign: "center"
         size_hint_y: None
-        pos_hint: {"center_x": 0.5} # ทำให้ขนาดของ Label ตรงกับขนาดข้อความ
-        height: self.texture_size[1]  # ความสูงของ Label ขึ้นกับขนาดข้อความ
-        size_hint_x: None
-        width: self.texture_size[0]   # ความสูงของ Label ขึ้นกับขนาดข้อความ
-        
-    # สร้าง BoxLayout สำหรับปุ่ม
-    BoxLayout:
-        orientation: 'vertical'  # ปุ่มเรียงจากบนลงล่าง
-        size_hint_y: None
-        height: 200  # ขนาดของ BoxLayout
-        spacing: 10  # ระยะห่างระหว่างปุ่ม
+        height: dp(30)
+        markup: True
 
-        # ปุ่ม Deal
-        Button:
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint: None, None
+        size: dp(600), dp(240)
+        spacing: dp(10)
+        pos_hint: {"center_x": 0.5}
+
+        MDRaisedButton:
             text: 'Deal'
-            font_size: 24
+            font_size: dp(20)
             size_hint: None, None
-            size: 250, 60
+            size: dp(150), dp(60)
+            md_bg_color: app.theme_cls.primary_color
             pos_hint: {"center_x": 0.5}
-            background_color: 0, 0.6, 0, 1
             on_press: root.deal(None)
 
-        # ปุ่ม Hit
-        Button:
+        MDRaisedButton:
             text: 'Hit'
-            font_size: 24
+            font_size: dp(20)
             size_hint: None, None
-            size: 250, 60
+            size: dp(150), dp(60)
+            md_bg_color: 1, 0, 0, 1
             pos_hint: {"center_x": 0.5}
-            background_color: 0.7, 0, 0, 1
             on_press: root.hit(None)
 
-        # ปุ่ม Stand
-        Button:
+        MDRaisedButton:
             text: 'Stand'
-            font_size: 24
+            font_size: dp(20)
             size_hint: None, None
-            size: 250, 60
+            size: dp(150), dp(60)
+            md_bg_color: 0, 0.6, 0, 1
             pos_hint: {"center_x": 0.5}
-            background_color: 0, 0.6, 0, 1
             on_press: root.stand(None)
 
-        # ปุ่ม Back to Menu
-        Button:
+        MDRaisedButton:
             text: 'Back to Menu'
+            font_size: dp(20)
             size_hint: None, None
-            size: 250, 60
+            size: dp(150), dp(60)
+            md_bg_color: 0.3, 0.3, 0.3, 1
             pos_hint: {"center_x": 0.5}
-            background_color: 0.3, 0.3, 0.3, 1
-            on_press: 
-                root.manager.transition.direction = "up"
+            on_press:
                 app.root.current = 'menu'
+                app.root.transition.direction = "up"

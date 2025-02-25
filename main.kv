@@ -1,67 +1,95 @@
 <MenuScreen>:
     canvas.before:
-        Color:
-            rgba: 0.1, 0.1, 0.1, 1  # สีพื้นหลังเข้ม
         Rectangle:
             pos: self.pos
             size: self.size
-
+    Video:
+        source: 'assets/backgroundRoulette.mp4'  # Path to your video file
+        state: 'play'
+        options: {'eos': 'loop'}  # กำหนดให้วิดีโอเล่นวนลูป
+        allow_stretch: True  # ขยายวิดีโอให้เต็มหน้าจอ
+        keep_ratio: False  # ไม่คำนึงถึงอัตราส่วนของวิดีโอ
+        size: self.size
+        pos: self.pos
+    
     MDBoxLayout:
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(20)
-        size_hint: (1, 1)
+        size_hint: (None, None)
+        size: dp(800), dp(600)  
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
         MDLabel:
             text: 'Panan Online'
-            font_style: 'H2'
+            font_style: 'H1' 
             halign: 'center'
             theme_text_color: 'Custom'
-            text_color: 1, 0.8, 0, 1
+            text_color: 1, 0.8, 0, 1  # สีตัวอักษร
             size_hint_y: None
-            height: self.texture_size[1]
+            height: dp(80) 
 
         Widget:
             size_hint_y: None
-            height: dp(30)  # Adjust the height as needed
+            height: dp(30)
 
         MDBoxLayout:
             orientation: 'vertical'
-            size_hint: (1, None)
-            height: dp(300)
+            size_hint: (None, None)
+            size: dp(500), dp(300)  
             spacing: dp(20)
             padding: dp(50), 0
             pos_hint: {'center_x': 0.5}
 
-            MDRaisedButton:
+            CustomRaisedButton:
+                id: roulette_button
                 text: 'Roulette'
                 pos_hint: {'center_x': 0.5}
-                size_hint: (0.8, None)
-                height: dp(50)
-                font_size: dp(18)
-                md_bg_color: 0.2, 0.6, 0.86, 1  # สีฟ้า
+                size_hint: (None, None)
+                size: dp(250), dp(80)  
+                font_size: dp(25)  
+                md_bg_color: 0.2, 0.6, 0.86, 1
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 0.3  # เงาสีดำ
+                    Rectangle:
+                        pos: self.pos[0] + 5, self.pos[1] - 5
+                        size: self.size
                 on_release:
                     root.manager.transition.direction = 'left'
                     app.root.current = 'roulette'
 
-            MDRaisedButton:
+            CustomRaisedButton:
+                id: blackjack_button
                 text: 'Blackjack'
                 pos_hint: {'center_x': 0.5}
-                size_hint: (0.8, None)
-                height: dp(50)
-                font_size: dp(18)
-                md_bg_color: 0.2, 0.6, 0.86, 1  # สีฟ้า
+                size_hint: (None, None)
+                size: dp(250), dp(80)
+                font_size: dp(25) 
+                md_bg_color: 0.2, 0.6, 0.86, 1
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 0.3  # เงาสีดำ
+                    Rectangle:
+                        pos: self.pos[0] + 5, self.pos[1] - 5
+                        size: self.size
                 on_release:
                     root.manager.transition.direction = 'left'
                     app.root.current = 'blackjack'
 
-            MDRaisedButton:
+            CustomRaisedButton:
+                id: exit_button
                 text: 'Exit'
                 pos_hint: {'center_x': 0.5}
-                size_hint: (0.8, None)
-                height: dp(50)
-                font_size: dp(18)
-                md_bg_color: 1, 0, 0, 1  # สีแดง
+                size_hint: (None, None)
+                size: dp(250), dp(80)  # ปรับขนาดปุ่ม
+                font_size: dp(25)  # ขนาดตัวอักษรใหญ่ขึ้น
+                md_bg_color: 1, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 0.3  # เงาสีดำ
+                    Rectangle:
+                        pos: self.pos[0] + 5, self.pos[1] - 5
+                        size: self.size
                 on_release:
                     app.stop()
