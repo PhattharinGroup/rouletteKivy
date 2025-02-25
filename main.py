@@ -23,7 +23,7 @@ class CustomRaisedButton(Button):
     def update_rect(self, *args):
         self.rect.pos = self.pos
         self.rect.size = self.size
-        
+
     def on_press(self):
         self.anim = Animation(scale=1.5, background_color=(1, 0.8, 0, 1), duration=0.5)
         self.anim.repeat = True
@@ -54,13 +54,13 @@ class RouletteScreen(MDScreen):
 class BlackjackScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Builder.load_file('games/blackjack/blackjackscreen.kv')
         layout = MDBoxLayout(
             orientation='vertical',
             size_hint=(None, None),
             size=(1200, 800),
             pos_hint={'center_x': 0.5, 'center_y': 0.5}
         )
+        Builder.load_file('games/blackjack/blackjackscreen.kv')
         self.game = BlackjackGame()
         layout.add_widget(self.game)
         self.add_widget(layout)

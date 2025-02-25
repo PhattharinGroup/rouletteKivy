@@ -1,68 +1,90 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.label import MDLabel
-from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.card import MDCard
-from kivymd.uix.dialog import MDDialog
-from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.graphics import Color, Rectangle
+from kivy.uix.image import AsyncImage
 import random
+import os
 
 class BlackjackGameLayout(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.deck = self.create_deck()
-        self.player_hand = []
-        self.dealer_hand = []
+        self.setup()  # เรียกใช้เมธอด setup เพื่อเริ่มต้นเกม
 
     def on_kv_post(self, base_widget):
+        # เก็บการอ้างอิงถึงวิดเจ็ตต่าง ๆ หลังจากที่ KV โหลดเสร็จ
         self.info_label = self.ids.info_label
         self.player_cards = self.ids.player_cards
         self.dealer_cards = self.ids.dealer_cards
 
     def create_deck(self):
-        suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-        ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-        deck = [{'suit': suit, 'rank': rank} for suit in suits for rank in ranks]
+        # สร้างสำรับไพ่ 52 ใบ
+        suits = ['hearts', 'diamonds', 'clubs', 'spades']
+        ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace']
+        deck = []
+        for suit in suits:
+            for rank in ranks:
+                image_name = f"{rank}_of_{suit}.png"
+                image_path = os.path.join('assets', 'CartPNG', image_name)
+                card = {'suit': suit.title(), 'rank': rank.title(), 'image': image_path}
+                deck.append(card)
         random.shuffle(deck)
         return deck
 
     def setup(self):
+        # รีเซ็ตสถานะเกม
         self.deck = self.create_deck()
         self.player_hand = []
         self.dealer_hand = []
+        self.game_started = False
+        if hasattr(self, 'info_label'):
+            self.info_label.text = "Welcome to Blackjack!"
+        if hasattr(self, 'player_cards'):
+            self.player_cards.clear_widgets()
+        if hasattr(self, 'dealer_cards'):
+            self.dealer_cards.clear_widgets()
 
     def deal(self, instance):
-        if not self.deck:
-            self.setup()
-        self.player_hand = [self.deck.pop(), self.deck.pop()]
-        self.dealer_hand = [self.deck.pop(), self.deck.pop()]
-        self.update_cards()
+        if not self.game_started:
+            self.game_started = True
+            self.info_label.text = ""
+            # ตรวจสอบว่าเด็คมีไพ่อย่างน้อย 4 ใบ ถ้าไม่พอ ให้รีเซ็ตเด็ค
+            if len(self.deck) < 4:
+                self.deck = self.create_deck()
+            self.player_hand = [self.deck.pop(), self.deck.pop()]
+            self.dealer_hand = [self.deck.pop(), self.deck.pop()]
+            self.update_cards()
 
     def hit(self, instance):
-        if not self.deck:
-            self.setup()
-        self.player_hand.append(self.deck.pop())
-        self.update_cards()
-        if self.calculate_score(self.player_hand) > 21:
-            self.check_winner()
+        if self.game_started:
+            if not self.deck:
+                # ถ้าไพ่หมด ให้รีเซ็ตเด็ค
+                self.deck = self.create_deck()
+            self.player_hand.append(self.deck.pop())
+            self.update_cards()
+            if self.calculate_score(self.player_hand) > 21:
+                self.check_winner()
 
     def stand(self, instance):
-        while self.calculate_score(self.dealer_hand) < 17:
-            if not self.deck:
-                self.setup()
-            self.dealer_hand.append(self.deck.pop())
-        self.update_cards()
-        self.check_winner()
+        if self.game_started:
+            while self.calculate_score(self.dealer_hand) < 17:
+                if not self.deck:
+                    # ถ้าไพ่หมด ให้รีเซ็ตเด็ค
+                    self.deck = self.create_deck()
+                self.dealer_hand.append(self.deck.pop())
+            self.update_cards(reveal_dealer=True)
+            self.check_winner()
 
     def calculate_score(self, hand):
+        # คำนวณคะแนนของมือ (player หรือ dealer)
         score = 0
         ace_count = 0
         for card in hand:
             rank = card['rank']
-            if rank in ['J', 'Q', 'K']:
+            if rank in ['Jack', 'Queen', 'King']:
                 score += 10
-            elif rank == 'A':
+            elif rank == 'Ace':
                 ace_count += 1
                 score += 11
             else:
@@ -72,29 +94,52 @@ class BlackjackGameLayout(MDBoxLayout):
             ace_count -= 1
         return score
 
-    def update_cards(self):
+    def update_cards(self, reveal_dealer=False):
+        # อัปเดตการแสดงผลไพ่บนหน้าจอ
         self.player_cards.clear_widgets()
         self.dealer_cards.clear_widgets()
 
         for card in self.player_hand:
             self.player_cards.add_widget(self.create_card(card))
-            
-        self.dealer_cards.add_widget(self.create_card(self.dealer_hand[0]))
-        self.dealer_cards.add_widget(self.create_card({'rank': '?', 'suit': ''}))  # ซ่อนใบที่สอง
+
+        for idx, card in enumerate(self.dealer_hand):
+            if idx == 0 or reveal_dealer:
+                self.dealer_cards.add_widget(self.create_card(card))
+            else:
+                back_card = {'rank': '?', 'suit': '', 'image': 'assets/CartPNG/red_joker.png'}
+                self.dealer_cards.add_widget(self.create_card(back_card))
 
     def create_card(self, card):
+        # สร้างวิดเจ็ตการ์ดพร้อมรูปภาพ
         card_widget = MDCard(
             size_hint=(None, None),
             size=("80dp", "120dp"),
-            padding="8dp",
             radius=[8, 8, 8, 8],
-            md_bg_color=(1, 1, 1, 1) if card['rank'] != '?' else (0.5, 0.5, 0.5, 1),
-            elevation=8
+            elevation=8,
+            md_bg_color=(1, 1, 1, 1)
         )
-        card_widget.add_widget(MDLabel(
-            text=f"{card['rank']} {card['suit']}" if card['rank'] != '?' else "?",
-            font_style="H6",
-            halign="center",
-            theme_text_color="Primary"
-        ))
+        image = card['image']
+        card_image = AsyncImage(
+            source=image,
+            allow_stretch=True,
+            keep_ratio=True,
+            size_hint=(None, None),
+            size=("80dp", "120dp")
+        )
+        card_widget.add_widget(card_image)
         return card_widget
+
+    def check_winner(self):
+        # ตรวจสอบผู้ชนะและอัปเดตข้อความ
+        player_score = self.calculate_score(self.player_hand)
+        dealer_score = self.calculate_score(self.dealer_hand)
+        self.update_cards(reveal_dealer=True)
+        if player_score > 21:
+            self.info_label.text = "[color=#ff0000]You busted! Dealer wins.[/color]"
+        elif dealer_score > 21 or player_score > dealer_score:
+            self.info_label.text = "[color=#00ff00]You win![/color]"
+        elif player_score < dealer_score:
+            self.info_label.text = "[color=#ff0000]Dealer wins.[/color]"
+        else:
+            self.info_label.text = "[color=#ffff00]It's a tie![/color]"
+        self.game_started = False

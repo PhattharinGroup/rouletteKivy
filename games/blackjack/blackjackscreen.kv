@@ -1,113 +1,160 @@
+#:import Window kivy.core.window.Window  
+
 <BlackjackGameLayout>:
     canvas.before:
         Color:
-            rgba: 0.8, 0.8, 0.8, 1  # สีพื้นหลังเทา
+            rgba: 0.8, 0.8, 0.8, 1  # ตั้งค่าสีพื้นหลังเป็นสีเทา (RGBA)
         Rectangle:
-            pos: self.pos
-            size: self.size
-            source: 'assets/background.png'  
+            pos: self.pos  # กำหนดตำแหน่งของสี่เหลี่ยมให้ตรงกับตำแหน่งของเลย์เอาต์
+            size: self.size  # กำหนดขนาดของสี่เหลี่ยมให้ตรงกับขนาดของเลย์เอาต์
+            source: 'assets/background.png'  # ใช้ภาพพื้นหลังจากไฟล์ 'assets/background.png' และปรับขนาดตามหน้าจอ
 
-    orientation: 'vertical'
-    spacing: dp(20)
-    size_hint: None, None
-    width: dp(800)  
-    height: dp(600)
-    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-    MDLabel:
-        text: "Blackjack Game"
-        font_style: "H3"
-        halign: "center"
-        size_hint_y: None
-        height: dp(50)
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        size_hint: None, None
-        size: dp(600), dp(250)
-        spacing: dp(10)
-        pos_hint: {"center_x": 0.5}
-
-        MDLabel:
-            text: "Dealer's Cards"
-            font_style: "H5"
-            halign: "center"
-            size_hint_y: None
-            height: dp(30)
-
-        MDBoxLayout:
-            id: dealer_cards
-            orientation: 'horizontal'
-            size_hint: None, None
-            size: dp(600), dp(120)
-            spacing: dp(10)
-            pos_hint: {"center_x": 0.5}
-
-        MDLabel:
-            text: "Player's Cards"
-            font_style: "H5"
-            halign: "center"
-            size_hint_y: None
-            height: dp(30)
-
-        MDBoxLayout:
-            id: player_cards
-            orientation: 'horizontal'
-            size_hint: None, None
-            size: dp(600), dp(120)
-            spacing: dp(10)
-            pos_hint: {"center_x": 0.5}
+    orientation: 'vertical'  # จัดวางวิดเจ็ตภายในในแนวตั้ง
+    spacing: dp(10)  # ระยะห่างระหว่างวิดเจ็ตในเลย์เอาต์เป็น 10dp
+    padding: dp(10)  # ระยะขอบภายในเลย์เอาต์เป็น 10dp
+    size_hint: None, None  # ไม่ใช้การปรับขนาดอัตโนมัติในแนวกว้างและสูง
+    size: self.size
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}  # จัดตำแหน่งให้อยู่กลางหน้าจอทั้งแนวนอนและแนวตั้ง
 
     MDLabel:
-        id: info_label
-        text: "Welcome to Blackjack!"
-        font_style: "H5"
-        halign: "center"
-        size_hint_y: None
-        height: dp(30)
-        markup: True
+        id: info_label  # ตั้งค่า ID เพื่อเข้าถึงวิดเจ็ตนี้จากโค้ด Python
+        text: "Welcome to Blackjack!"  # ข้อความที่จะแสดงในตอนเริ่มต้น
+        font_style: "H3"  # รูปแบบฟอนต์เป็นหัวเรื่องขนาด 3
+        halign: "center"  # จัดข้อความให้อยู่กลางในแนวนอน
+        size_hint_y: None  # ไม่ใช้การปรับขนาดอัตโนมัติในแนวตั้ง
+        height: dp(200)  # กำหนดความสูงของ label
+        markup: True  # อนุญาตให้ใช้มาร์กอัปในข้อความ (สำหรับการจัดรูปแบบเพิ่มเติม)
+        size_hint_x: 8  # ใช้ขนาดเต็มในแนวนอน (เหมาะสมกับขนาดของหน้าจอ)
+        pos_hint: {"center_x": 0.5}  # จัดตำแหน่งให้อยู่กลางในแนวนอน
+        y: dp(500)  # กำหนดระยะห่างจากขอบบน 500dp
+        width: dp(800)  # กำหนดความกว้างของ label (ควรกำหนดขนาดเพื่อให้มีขนาดที่เหมาะสม)
+        canvas.before:
+            Color:
+                rgba: 0, 0, 1, 1  # สีกรอบเป็นสีน้ำเงิน
+            Line:
+                width: 2  # กำหนดความหนาของกรอบ
+                rectangle: (self.x, self.y, self.width, self.height)  # กำหนดกรอบรอบ ๆ label
+
+
 
     MDBoxLayout:
-        orientation: 'vertical'
-        size_hint: None, None
-        size: dp(600), dp(240)
-        spacing: dp(10)
-        pos_hint: {"center_x": 0.5}
+        orientation: 'vertical'  # จัดวางวิดเจ็ตภายในในแนวตั้ง
+        spacing: dp(10)  # ระยะห่างระหว่างวิดเจ็ตเป็น 10dp
+        size_hint_y: None  # ไม่ใช้การปรับขนาดอัตโนมัติในแนวตั้ง
+        height: dp(280)  # กำหนดความสูงของกล่องเป็น 280dp
+        canvas.before:
+            Color:
+                rgba: 0, 1, 0, 1  # สีกรอบเป็นสีเขียว
+            Line:
+                width: 2  # กำหนดความหนาของกรอบ
+                rectangle: (self.x, self.y, self.width, self.height)  # กำหนดกรอบรอบ ๆ label
+
+        MDLabel:
+            text: "Dealer's Cards"  # ข้อความแสดงส่วนของไพ่ดีลเลอร์
+            font_style: "H5"  # รูปแบบฟอนต์เป็นหัวเรื่องขนาด 5
+            halign: "center"  # จัดข้อความให้อยู่กลางในแนวนอน
+            size_hint_y: None  # ไม่ใช้การปรับขนาดอัตโนมัติในแนวตั้ง
+            height: self.texture_size[1]  # ความสูงตามขนาดข้อความ
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 0, 1  # สีกรอบเป็นสีแดง
+                Line:
+                    width: 2  # กำหนดความหนาของกรอบ
+                    rectangle: (self.x, self.y, self.width, self.height)  # กำหนดกรอบรอบ ๆ label
+            
+
+        MDBoxLayout:
+            id: dealer_cards  # ตั้งค่า ID เพื่อเข้าถึงจากโค้ด Python (สำหรับแสดงการ์ดของดีลเลอร์)
+            orientation: 'horizontal'  # จัดวางการ์ดในแนวนอน
+            size_hint: None, None  # ไม่ใช้การปรับขนาดอัตโนมัติ
+            width: self.minimum_width  # ความกว้างตามขนาดเนื้อหาภายใน
+            height: dp(130)  # ความสูงของกล่องการ์ดเป็น 130dp
+            pos_hint: {"center_x": 0.5}  # จัดให้อยู่กลางในแนวนอน
+            spacing: dp(5)  # ระยะห่างระหว่างการ์ดเป็น 5dp
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 0, 1  # สีกรอบเป็นสีเหลือง
+                Line:
+                    width: 2  # กำหนดความหนาของกรอบ
+                    rectangle: (self.x, self.y, self.width, self.height)  # กำหนดกรอบรอบ ๆ label
+            
+
+        MDLabel:
+            text: "Player's Cards"  # ข้อความแสดงส่วนของไพ่ผู้เล่น
+            font_style: "H5"  # รูปแบบฟอนต์เป็นหัวเรื่องขนาด 5
+            halign: "center"  # จัดข้อความให้อยู่กลางในแนวนอน
+            size_hint_y: None  # ไม่ใช้การปรับขนาดอัตโนมัติในแนวตั้ง
+            height: self.texture_size[1]  # ความสูงตามขนาดข้อความ
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 1, 1  # สีกรอบเป็นสีชมพู
+                Line:
+                    width: 2  # กำหนดความหนาของกรอบ
+                    rectangle: (self.x, self.y, self.width, self.height)  # กำหนดกรอบรอบ ๆ label
+            
+
+        MDBoxLayout:
+            id: player_cards  # ตั้งค่า ID เพื่อเข้าถึงจากโค้ด Python (สำหรับแสดงการ์ดของผู้เล่น)
+            orientation: 'horizontal'  # จัดวางการ์ดในแนวนอน
+            size_hint: None, None  # ไม่ใช้การปรับขนาดอัตโนมัติ
+            width: self.minimum_width  # ความกว้างตามขนาดเนื้อหาภายใน
+            height: dp(130)  # ความสูงของกล่องการ์ดเป็น 130dp
+            pos_hint: {"center_x": 0.5}  # จัดให้อยู่กลางในแนวนอน
+            spacing: dp(5)  # ระยะห่างระหว่างการ์ดเป็น 5dp
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 1, 1  # สีกรอบเป็นสีชมพู
+                Line:
+                    width: 2  # กำหนดความหนาของกรอบ
+                    rectangle: (self.x, self.y, self.width, self.height)  # กำหนดกรอบรอบ ๆ label
+
+    MDLabel:
+        size_hint_y: None  # ไม่ใช้การปรับขนาดอัตโนมัติในแนวตั้ง
+        height: dp(10)  # ความสูงเป็น 10dp ใช้เป็นตัวเว้นระยะ
+
+    MDBoxLayout:
+        orientation: 'horizontal'  # จัดวางปุ่มในแนวนอน
+        spacing: dp(10)  # ระยะห่างระหว่างปุ่มเป็น 10dp
+        size_hint_y: None  # ไม่ใช้การปรับขนาดอัตโนมัติในแนวตั้ง
+        height: dp(100)  # ความสูงของกล่องปุ่มเป็น 100dp
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}  # จัดกล่องปุ่มให้อยู่กลางในแนวนอน
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  # สีกรอบเป็นสีดำ
+            Line:
+                width: 2  # กำหนดความหนาของกรอบ
+                rectangle: (self.x, self.y, self.width, self.height)  # กำหนดกรอบรอบ ๆ label
 
         MDRaisedButton:
-            text: 'Deal'
-            font_size: dp(20)
-            size_hint: None, None
-            size: dp(150), dp(60)
-            md_bg_color: app.theme_cls.primary_color
-            pos_hint: {"center_x": 0.5}
-            on_press: root.deal(None)
+            text: 'Deal'  # ปุ่มสำหรับเริ่มเกมหรือแจกไพ่
+            font_size: dp(18)  # ขนาดฟอนต์ของปุ่มเป็น 18dp
+            size_hint: (1, None)  # ขยายปุ่มในแนวนอนให้เต็มพื้นที่
+            height: dp(50)  # ความสูงของปุ่มเป็น 50dp
+            md_bg_color: app.theme_cls.primary_color  # สีพื้นหลังปุ่มใช้สีหลักของธีม
+            on_press: root.deal(self)  # เมื่อกดปุ่ม เรียกเมธอด deal ใน root (BlackjackGameLayout)
 
         MDRaisedButton:
-            text: 'Hit'
-            font_size: dp(20)
-            size_hint: None, None
-            size: dp(150), dp(60)
-            md_bg_color: 1, 0, 0, 1
-            pos_hint: {"center_x": 0.5}
-            on_press: root.hit(None)
+            text: 'Hit'  # ปุ่มสำหรับจั่วไพ่เพิ่ม
+            font_size: dp(18)  # ขนาดฟอนต์ของปุ่มเป็น 18dp
+            size_hint: (1, None)  # ขยายปุ่มในแนวนอนให้เต็มพื้นที่
+            height: dp(50)  # ความสูงของปุ่มเป็น 50dp
+            md_bg_color: 1, 0, 0, 1  # สีพื้นหลังปุ่มเป็นสีแดง (RGBA)
+            on_press: root.hit(self)  # เมื่อกดปุ่ม เรียกเมธอด hit ใน root
 
         MDRaisedButton:
-            text: 'Stand'
-            font_size: dp(20)
-            size_hint: None, None
-            size: dp(150), dp(60)
-            md_bg_color: 0, 0.6, 0, 1
-            pos_hint: {"center_x": 0.5}
-            on_press: root.stand(None)
+            text: 'Stand'  # ปุ่มสำหรับหยุดการจั่วไพ่
+            font_size: dp(18)  # ขนาดฟอนต์ของปุ่มเป็น 18dp
+            size_hint: (1, None)  # ขยายปุ่มในแนวนอนให้เต็มพื้นที่
+            height: dp(50)  # ความสูงของปุ่มเป็น 50dp
+            md_bg_color: 0, 0.6, 0, 1  # สีพื้นหลังปุ่มเป็นสีเขียวเข้ม (RGBA)
+            on_press: root.stand(self)  # เมื่อกดปุ่ม เรียกเมธอด stand ใน root
 
         MDRaisedButton:
-            text: 'Back to Menu'
-            font_size: dp(20)
-            size_hint: None, None
-            size: dp(150), dp(60)
-            md_bg_color: 0.3, 0.3, 0.3, 1
-            pos_hint: {"center_x": 0.5}
+            text: 'Back to Menu'  # ปุ่มสำหรับกลับไปยังเมนูหลัก
+            font_size: dp(18)  # ขนาดฟอนต์ของปุ่มเป็น 18dp
+            size_hint: (1, None)  # ขยายปุ่มในแนวนอนให้เต็มพื้นที่
+            height: dp(50)  # ความสูงของปุ่มเป็น 50dp
+            md_bg_color: 0.3, 0.3, 0.3, 1  # สีพื้นหลังปุ่มเป็นสีเทาเข้ม (RGBA)
             on_press:
-                app.root.current = 'menu'
-                app.root.transition.direction = "up"
+                app.root.current = 'menu'  # เปลี่ยนหน้าจอหลักของแอปไปยังหน้าที่มีชื่อว่า 'menu'
+                app.root.transition.direction = "up"  # กำหนดทิศทางการเปลี่ยนหน้าจอเป็นเลื่อนขึ้น
