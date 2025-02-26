@@ -1,9 +1,11 @@
-from kivy.lang import Builder
 from kivymd.app import MDApp
+from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.card import MDCard
-from kivy.graphics import Color, Rectangle
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.label import MDLabel
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import AsyncImage
+from kivy.graphics import Color, Rectangle
 import random
 import os
 
@@ -15,6 +17,7 @@ class BlackjackGameLayout(MDBoxLayout):
     def on_kv_post(self, base_widget):
         # เก็บการอ้างอิงถึงวิดเจ็ตต่าง ๆ หลังจากที่ KV โหลดเสร็จ
         self.info_label = self.ids.info_label
+        self.click_to_continue = self.ids.click_to_continue
         self.player_cards = self.ids.player_cards
         self.dealer_cards = self.ids.dealer_cards
 
@@ -40,6 +43,8 @@ class BlackjackGameLayout(MDBoxLayout):
         self.game_started = False
         if hasattr(self, 'info_label'):
             self.info_label.text = "Welcome to Blackjack!"
+        if hasattr(self, 'click_to_continue'):
+            self.click_to_continue.opacity = 1
         if hasattr(self, 'player_cards'):
             self.player_cards.clear_widgets()
         if hasattr(self, 'dealer_cards'):
@@ -49,6 +54,7 @@ class BlackjackGameLayout(MDBoxLayout):
         if not self.game_started:
             self.game_started = True
             self.info_label.text = ""
+            self.click_to_continue.opacity = 0
             # ตรวจสอบว่าเด็คมีไพ่อย่างน้อย 4 ใบ ถ้าไม่พอ ให้รีเซ็ตเด็ค
             if len(self.deck) < 4:
                 self.deck = self.create_deck()
@@ -111,21 +117,9 @@ class BlackjackGameLayout(MDBoxLayout):
 
     def create_card(self, card):
         # สร้างวิดเจ็ตการ์ดพร้อมรูปภาพ
-        card_widget = MDCard(
-            size_hint=(None, None),
-            size=("80dp", "120dp"),
-            radius=[8, 8, 8, 8],
-            elevation=8,
-            md_bg_color=(1, 1, 1, 1)
-        )
+        card_widget = MDBoxLayout(size_hint=(None, None), size=("80dp", "120dp"))
         image = card['image']
-        card_image = AsyncImage(
-            source=image,
-            allow_stretch=True,
-            keep_ratio=True,
-            size_hint=(None, None),
-            size=("80dp", "120dp")
-        )
+        card_image = AsyncImage(source=image, allow_stretch=True, keep_ratio=True)
         card_widget.add_widget(card_image)
         return card_widget
 
