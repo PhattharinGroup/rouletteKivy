@@ -29,7 +29,7 @@ class BlackjackGameLayout(MDBoxLayout):
         for suit in suits:
             for rank in ranks:
                 image_name = f"{rank}_of_{suit}.png"
-                image_path = os.path.join('assets', 'CartPNG', image_name)
+                image_path = os.path.join('assets', 'PlayingCards', image_name)
                 card = {'suit': suit.title(), 'rank': rank.title(), 'image': image_path}
                 deck.append(card)
         random.shuffle(deck)
@@ -112,7 +112,7 @@ class BlackjackGameLayout(MDBoxLayout):
             if idx == 0 or reveal_dealer:
                 self.dealer_cards.add_widget(self.create_card(card))
             else:
-                back_card = {'rank': '?', 'suit': '', 'image': 'assets/CartPNG/red_joker.png'}
+                back_card = {'rank': '?', 'suit': '', 'image': 'assets/PlayingCards/back.png'}
                 self.dealer_cards.add_widget(self.create_card(back_card))
 
     def create_card(self, card):

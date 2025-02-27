@@ -4,10 +4,11 @@
 <BlackjackGameLayout>:
     canvas.before:
         Color:
-            rgba: 0.8, 0.8, 0.8, 1
+            rgba: 1, 1, 1, 1  # Ensure the image is fully opaque
         Rectangle:
             pos: self.pos
             size: self.size
+            source: 'assets/PlayingCards/back6.jpeg'  # Path to your background image
 
     orientation: 'vertical'
     spacing: dp(20)
@@ -23,6 +24,12 @@
         size_hint_y: None
         height: dp(100)
         opacity: 1
+        canvas.before:
+            Color:
+                rgba: 1, 0, 0, 1  # Red border
+            Line:
+                rectangle: self.x, self.y, self.width, self.height
+                width: 2
 
     MDLabel:
         id: click_to_continue
@@ -33,13 +40,25 @@
         height: dp(50)
         opacity: 1
         on_touch_down: root.deal(self)
+        canvas.before:
+            Color:
+                rgba: 0, 1, 0, 1  # Green border
+            Line:
+                rectangle: self.x, self.y, self.width, self.height
+                width: 2
 
     BoxLayout:
         orientation: 'vertical'
         size_hint_y: None
         height: self.minimum_height
         pos_hint: {"center_x": 0.5}
-        spacing: dp(5)
+        spacing: dp(50)
+        canvas.before:
+            Color:
+                rgba: 0, 0, 1, 1  # Blue border
+            Line:
+                rectangle: self.x, self.y, self.width, self.height
+                width: 2
 
         MDLabel:
             text: "Dealer's Cards"
@@ -47,15 +66,26 @@
             halign: "center"
             size_hint_y: None
             height: self.texture_size[1]
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 0, 1  # Yellow border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
         
         MDBoxLayout:
             id: dealer_cards
             orientation: 'horizontal'
-            size_hint_x: None
-            width: self.minimum_width
+            size_hint_x: 1
             height: dp(150)
             spacing: dp(10)
             pos_hint: {"center_x": 0.5}
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 1, 1  # Magenta border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
 
         MDLabel:
             text: "Player's Cards"
@@ -63,15 +93,26 @@
             halign: "center"
             size_hint_y: None
             height: self.texture_size[1]
+            canvas.before:
+                Color:
+                    rgba: 0, 1, 1, 1  # Cyan border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
 
         MDBoxLayout:
             id: player_cards
             orientation: 'horizontal'
-            size_hint_x: None
-            width: self.minimum_width
+            size_hint_x: 1
             height: dp(150)
             spacing: dp(10)
             pos_hint: {"center_x": 0.5}
+            canvas.before:
+                Color:
+                    rgba: 1, 0.5, 0, 1  # Orange border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
 
     MDBoxLayout:
         orientation: 'vertical'
@@ -79,6 +120,12 @@
         size_hint_y: None
         height: dp(320)
         pos_hint: {"center_x": 0.5}
+        canvas.before:
+            Color:
+                rgba: 0.5, 0, 0.5, 1  # Purple border
+            Line:
+                rectangle: self.x, self.y, self.width, self.height
+                width: 2
 
         MDRaisedButton:
             text: 'Deal'
@@ -88,6 +135,12 @@
             height: dp(80)
             md_bg_color: app.theme_cls.primary_color
             on_press: root.deal(self)
+            canvas.before:
+                Color:
+                    rgba: 0.5, 0.5, 0.5, 1  # Gray border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
 
         MDRaisedButton:
             text: 'Hit'
@@ -97,6 +150,12 @@
             height: dp(80)
             md_bg_color: 1, 0, 0, 1
             on_press: root.hit(self)
+            canvas.before:
+                Color:
+                    rgba: 0.5, 0.5, 0, 1  # Olive border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
 
         MDRaisedButton:
             text: 'Stand'
@@ -106,6 +165,12 @@
             height: dp(80)
             md_bg_color: 0, 0.6, 0, 1
             on_press: root.stand(self)
+            canvas.before:
+                Color:
+                    rgba: 0, 0.5, 0.5, 1  # Teal border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
 
         MDRaisedButton:
             text: 'Back to Menu'
@@ -118,4 +183,10 @@
                 app.root.current = 'menu'
                 app.root.transition.direction = "up"
                 root.setup()  # รีเซ็ตเกมกลับไปเริ่มใหม่
+            canvas.before:
+                Color:
+                    rgba: 0.5, 0, 0, 1  # Maroon border
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
 
