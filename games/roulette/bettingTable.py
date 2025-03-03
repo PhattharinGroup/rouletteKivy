@@ -78,8 +78,10 @@ class BettingTable(BoxLayout):
             bg_color = (0.8, 0, 0, 1)
         elif text == 'BLACK':
             bg_color = (0, 0, 0, 1)
+        elif text in ['0', '00']:
+            bg_color = (0, 0.5, 0, 1)
         else:
-            bg_color = (0.2, 0.2, 0.2, 1)
+            bg_color = (0.1, 0.1, 0.1, 1)
 
         btn = Button(
             text=text,
@@ -93,42 +95,69 @@ class BettingTable(BoxLayout):
 
     def _reset_buttons(self):
         if self.current_bet_button:
-            if self.current_bet_button.text in ['RED', 'BLACK']:
-                original_color = (0.8, 0, 0, 1) if self.current_bet_button.text == 'RED' else (0, 0, 0, 1)
-            else:
-                num = self.current_bet_button.text
-                if num.isdigit() and int(num) in self.special_bets['RED']:
+            text = self.current_bet_button.text
+            if text == 'RED':
+                original_color = (0.8, 0, 0, 1)
+            elif text == 'BLACK':
+                original_color = (0, 0, 0, 1)
+            elif text in ['0', '00']:
+                original_color = (0, 0.5, 0, 1)
+            elif text.isdigit():
+                num = int(text)
+                if num in self.special_bets['RED']:
                     original_color = (0.8, 0, 0, 1)
-                elif num in ['0', '00']:
-                    original_color = (0, 0.5, 0, 1)
                 else:
                     original_color = (0, 0, 0, 1)
+            else:
+                original_color = (0.1, 0.1, 0.1, 1)
+
             self.current_bet_button.background_color = original_color
 
     def on_number_press(self, instance):
         try:
-            self._reset_buttons() 
-            bet_type = int(instance.text)
+            bet_type = instance.text
             bet_amount = 100
+
+            if self.current_bet_button == instance:
+                print(f"\nCanceling bet on number {bet_type}")
+                self._reset_buttons()
+                self.current_bet_button = None
+                
+                if self.roulette_wheel:
+                    self.roulette_wheel.set_bet(None, 0)
+                return
+            
+            self._reset_buttons()
             print(f"\nBetting {bet_amount} on number {bet_type}")
             
             instance.background_color = (0.5, 0.5, 0.5, 1)
             self.current_bet_button = instance
+
+            if bet_type == '00':
+                bet_value = bet_type
+            else:
+                bet_value = int(bet_type)
             
             if self.roulette_wheel:
-                self.roulette_wheel.set_bet(bet_type, bet_amount)
-            elif hasattr(self.parent, 'roulette_wheel'):
-                self.parent.roulette_wheel.set_bet(bet_type, bet_amount)
-            elif hasattr(self.parent.parent, 'roulette_wheel'):
-                self.parent.parent.roulette_wheel.set_bet(bet_type, bet_amount)
+                self.roulette_wheel.set_bet(bet_value, bet_amount)
         except Exception as e:
-            print(f"Error placing bet: {e}")
+            print(f"Error handling bet: {e}")
 
     def on_special_bet_press(self, instance):
         try:
-            self._reset_buttons()
             bet_type = instance.text
             bet_amount = 100
+
+            if self.current_bet_button == instance:
+                print(f"\nCanceling bet on {bet_type}")
+                self._reset_buttons()
+                self.current_bet_button = None
+                
+                if self.roulette_wheel:
+                    self.roulette_wheel.set_bet(None, 0)
+                return
+
+            self._reset_buttons()
             print(f"\nBetting {bet_amount} on {bet_type}")
             
             instance.background_color = (0.5, 0.5, 0.5, 1)
@@ -136,9 +165,5 @@ class BettingTable(BoxLayout):
             
             if self.roulette_wheel:
                 self.roulette_wheel.set_bet(bet_type, bet_amount)
-            elif hasattr(self.parent, 'roulette_wheel'):
-                self.parent.roulette_wheel.set_bet(bet_type, bet_amount)
-            elif hasattr(self.parent.parent, 'roulette_wheel'):
-                self.parent.parent.roulette_wheel.set_bet(bet_type, bet_amount)
         except Exception as e:
-            print(f"Error placing bet: {e}")
+            print(f"Error handling bet: {e}")
