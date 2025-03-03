@@ -1,6 +1,6 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.properties import ObjectProperty
 from kivy.clock import Clock
 from kivy.metrics import dp
@@ -15,10 +15,15 @@ class RouletteGameLayout(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.setup_called = False
+        self.bind(parent=self._on_parent)
         self._init_layout()
         self._init_background()
         self._init_wheel()
         self._init_buttons()
+
+    def _on_parent(self, instance, value):
+        if value and isinstance(value, ScreenManager):
+            self.manager = value
 
     def _init_background(self):
         with self.canvas.before:
@@ -83,8 +88,14 @@ class RouletteGameLayout(Screen):
         self.layout.add_widget(buttons_layout)
 
     def exit_game(self):
+        # Find ScreenManager if not already set
         if not self.manager:
-            self.manager = self.parent
+            parent = self.parent
+            while parent:
+                if isinstance(parent, ScreenManager):
+                    self.manager = parent
+                    break
+                parent = parent.parent
         
         if self.manager:
             self.manager.transition.direction = 'up'

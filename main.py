@@ -45,9 +45,12 @@ class MenuScreen(MDScreen):
 class RouletteScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        layout = MDBoxLayout(orientation='vertical', size_hint=(1, 1), pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        layout = MDBoxLayout(
+            orientation='vertical', 
+            size_hint=(1, 1), 
+            pos_hint={'center_x': 0.5, 'center_y': 0.5}
+        )
         self.game = RouletteGame()
-        self.game.setup()
         layout.add_widget(self.game)
         self.add_widget(layout)
 
