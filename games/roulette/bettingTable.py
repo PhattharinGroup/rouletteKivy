@@ -28,6 +28,8 @@ class BettingTable(BoxLayout):
             '19-36': range(19, 37)
         }
         self._init_table()
+        if roulette_wheel:
+            roulette_wheel.bind(on_spin_complete=self._on_spin_complete)
 
     def _init_table(self):
         self.layout = BoxLayout(orientation='vertical')
@@ -119,7 +121,6 @@ class BettingTable(BoxLayout):
             bet_amount = 100
 
             if self.current_bet_button == instance:
-                print(f"\nCanceling bet on number {bet_type}")
                 self._reset_buttons()
                 self.current_bet_button = None
                 
@@ -128,7 +129,6 @@ class BettingTable(BoxLayout):
                 return
             
             self._reset_buttons()
-            print(f"\nBetting {bet_amount} on number {bet_type}")
             
             instance.background_color = (0.5, 0.5, 0.5, 1)
             self.current_bet_button = instance
@@ -149,7 +149,6 @@ class BettingTable(BoxLayout):
             bet_amount = 100
 
             if self.current_bet_button == instance:
-                print(f"\nCanceling bet on {bet_type}")
                 self._reset_buttons()
                 self.current_bet_button = None
                 
@@ -158,7 +157,6 @@ class BettingTable(BoxLayout):
                 return
 
             self._reset_buttons()
-            print(f"\nBetting {bet_amount} on {bet_type}")
             
             instance.background_color = (0.5, 0.5, 0.5, 1)
             self.current_bet_button = instance
@@ -167,3 +165,24 @@ class BettingTable(BoxLayout):
                 self.roulette_wheel.set_bet(bet_type, bet_amount)
         except Exception as e:
             print(f"Error handling bet: {e}")
+
+    def _on_spin_complete(self, *args):
+        if self.current_bet_button:
+            text = self.current_bet_button.text
+            if text == 'RED':
+                original_color = (0.8, 0, 0, 1)
+            elif text == 'BLACK':
+                original_color = (0, 0, 0, 1)
+            elif text in ['0', '00']:
+                original_color = (0, 0.5, 0, 1)
+            elif text.isdigit():
+                num = int(text)
+                if num in self.special_bets['RED']:
+                    original_color = (0.8, 0, 0, 1)
+                else:
+                    original_color = (0, 0, 0, 1)
+            else:
+                original_color = (0.1, 0.1, 0.1, 1)
+            
+            self.current_bet_button.background_color = original_color
+            self.current_bet_button = None

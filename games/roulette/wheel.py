@@ -6,6 +6,7 @@ from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import BooleanProperty
 
 class StatusDisplay(BoxLayout):
     def __init__(self, **kwargs):
@@ -121,8 +122,11 @@ class WheelDisplay(Widget):
         self.draw_wheel()
 
 class RouletteWheel(BoxLayout):
+    on_spin_complete = BooleanProperty(False)
+    
     def __init__(self, **kwargs):
         super().__init__(orientation='horizontal', **kwargs)
+        self.register_event_type('on_spin_complete')
         self._init_properties()
         self._setup_layout()
         self.current_bet = None
@@ -134,18 +138,42 @@ class RouletteWheel(BoxLayout):
         self.status_display.update_bet(bet_type, amount)
 
     def _check_win(self, result):
+        """Check if the bet won based on the result"""
+        print(f"\nChecking win condition for bet: {self.current_bet}, result: {result}")
+
         if not self.current_bet:
             return False
-            
-        if isinstance(self.current_bet, int):
-            return result == self.current_bet
-        elif self.current_bet == 'RED':
-            return self.color_text == 'Red'
-        elif self.current_bet == 'BLACK':
-            return self.color_text == 'Black'
-        elif self.current_bet == 'GREEN':
-            return self.color_text == 'Green'
-        return False
+
+        try:
+            result_str = str(result)
+            if result_str == '00':
+                return self.current_bet == '00'
+            if result_str == '0':
+                return self.current_bet == '0'
+
+            result_num = int(result_str)
+            print(f"Converted result number: {result_num}")
+
+            bet_conditions = {
+                'RED': lambda x: x in {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36},
+                'BLACK': lambda x: x in {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35},
+                'EVEN': lambda x: x % 2 == 0,
+                'ODD': lambda x: x % 2 == 1,
+                '1st 12': lambda x: 1 <= x <= 12,
+                '2nd 12': lambda x: 13 <= x <= 24,
+                '3rd 12': lambda x: 25 <= x <= 36,
+                '1-18': lambda x: 1 <= x <= 18,
+                '19-36': lambda x: 19 <= x <= 36,
+            }
+
+            if isinstance(self.current_bet, (int, str)) and str(self.current_bet) == result_str:
+                return True
+
+            return bet_conditions.get(self.current_bet, lambda x: False)(result_num)
+
+        except Exception as e:
+            print(f"Error checking win: {e}")
+            return False
 
     def _init_properties(self):
         self.numbers = self._initialize_numbers()
@@ -190,11 +218,11 @@ class RouletteWheel(BoxLayout):
         colors = []
         for num in self.numbers:
             if num in [0, 00]:
-                colors.append((0, 0.5, 0, 1))  # Green
+                colors.append((0, 0.5, 0, 1))
             elif num in [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]:
-                colors.append((0.8, 0, 0, 1))  # Red
+                colors.append((0.8, 0, 0, 1))
             else:
-                colors.append((0.2, 0.2, 0.2, 1))  # Black
+                colors.append((0.2, 0.2, 0.2, 1))
         return colors
 
     def spin(self):
@@ -222,7 +250,16 @@ class RouletteWheel(BoxLayout):
             won = self._check_win(result)
             winnings = self.bet_amount * 2 if won else self.bet_amount
             self.status_display.update_result(won, winnings)
-            
+            print(f"\nBet: {self.current_bet} (${self.bet_amount})")
+            print(f"{'Won' if won else 'Lost'}: ${winnings}")
+        
+        self.current_bet = None
+        self.bet_amount = 0
+        self.status_display.update_bet('None', 0)
+        print("Bet reset for next spin")
+        print("-------End Result-------")
+        
+        self.dispatch('on_spin_complete')
         return result
 
     def start_spin(self):
@@ -250,5 +287,7 @@ class RouletteWheel(BoxLayout):
         print(f"Number: {self.result}")
         print(f"Color: {self.color_text}")
         print(self.status_display.spin_status_label.text)
-        print("-------End Result-------")
         return self.result
+
+    def on_spin_complete(self, *args):
+        pass
