@@ -1,9 +1,13 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-import games.roulette.wheel as wheel
 from kivy.uix.screenmanager import Screen
 from kivy.properties import ObjectProperty
 from kivy.clock import Clock
+from kivy.metrics import dp
+from kivy.uix.widget import Widget
+from kivy.graphics import Color, Rectangle
+
+import games.roulette.wheel as wheel
 
 class RouletteGameLayout(Screen):
     manager = ObjectProperty(None, allownone=True)
@@ -11,40 +15,72 @@ class RouletteGameLayout(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.setup_called = False
+        self._init_layout()
+        self._init_background()
+        self._init_wheel()
+        self._init_buttons()
+
+    def _init_background(self):
+        with self.canvas.before:
+            Color(0.1, 0.3, 0.1, 1)
+            self.rect = Rectangle(size=self.size, pos=self.pos)
+        self.bind(size=self.update_rect, pos=self.update_rect)
+        
+    def update_rect(self, *args):
+        self.rect.pos = self.pos
+        self.rect.size = self.size
+
+    def _init_layout(self):
         self.layout = BoxLayout(
             orientation='vertical',
-            spacing=10,
-            padding=10
+            spacing=dp(20),
+            padding=dp(20),
+            size_hint=(1, 1),
+            pos_hint={'center_x': 0.5, 'center_y': 0.5}
+        )
+        self.add_widget(self.layout)
+        
+    def _init_wheel(self):
+        wheel_container = BoxLayout(
+            orientation='horizontal',
+            size_hint=(1, 1)
         )
         
-        self.roulette_wheel = wheel.RouletteWheel()
-        self.layout.add_widget(self.roulette_wheel)
+        wheel_container.add_widget(Widget(size_hint=(0.4, 1)))
         
+        self.roulette_wheel = wheel.RouletteWheel(size_hint=(0.6, 1))
+        wheel_container.add_widget(self.roulette_wheel)
+        
+        self.layout.add_widget(wheel_container)
+        
+    def _init_buttons(self):
         buttons_layout = BoxLayout(
             orientation='vertical',
-            size_hint=(1, 0.2),
-            spacing=10
+            size_hint=(1, 0.3),
+            spacing=dp(20),
+            padding=[dp(20), 0, dp(20), dp(20)]  
         )
-        
         self.spin_button = Button(
             text='SPIN!',
             size_hint=(1, 1),
-            background_color=(0, 0.7, 0, 1)
+            background_color=(0, 0, 0, 1),
+            bold=True,
+            font_size=dp(24)
         )
         self.spin_button.bind(on_press=self.on_spin)
         
         exit_button = Button(
             text='EXIT',
             size_hint=(1, 1),
-            background_color=(0.7, 0, 0, 1)
+            background_color=(0.7, 0, 0, 1),
+            bold=True,
+            font_size=dp(20)
         )
         exit_button.bind(on_press=lambda x: self.exit_game())
         
         buttons_layout.add_widget(self.spin_button)
         buttons_layout.add_widget(exit_button)
         self.layout.add_widget(buttons_layout)
-        
-        self.add_widget(self.layout)
 
     def exit_game(self):
         if not self.manager:

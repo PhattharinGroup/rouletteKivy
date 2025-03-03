@@ -45,7 +45,7 @@ class MenuScreen(MDScreen):
 class RouletteScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        layout = MDBoxLayout(orientation='vertical', size_hint=(None, None), size=(1200, 800))
+        layout = MDBoxLayout(orientation='vertical', size_hint=(1, 1), pos_hint={'center_x': 0.5, 'center_y': 0.5})
         self.game = RouletteGame()
         self.game.setup()
         layout.add_widget(self.game)
@@ -56,7 +56,7 @@ class BlackjackScreen(MDScreen):
         super().__init__(**kwargs)
         layout = MDBoxLayout(
             orientation='vertical',
-            size_hint=(1, 1),  # ✅ ปรับให้เต็มหน้าจออัตโนมัติ
+            size_hint=(1, 1),
             pos_hint={'center_x': 0.5, 'center_y': 0.5}
         )
         Builder.load_file('games/blackjack/blackjackscreen.kv')
@@ -76,7 +76,7 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = "Blue"  
         self.theme_cls.accent_palette = "Orange" 
         Builder.load_file('main.kv')
-        Window.size = (1400, 900)  # ✅ ลองเพิ่มขนาดหน้าต่างให้ใหญ่ขึ้น 
+        Window.size = (1200, 800) 
         Window.left = 300
         Window.top = 100
         return GameScreenManager()

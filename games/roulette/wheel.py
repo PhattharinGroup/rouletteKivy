@@ -98,6 +98,11 @@ class RouletteWheel(BoxLayout):
     """Main class that coordinates the wheel game"""
     def __init__(self, **kwargs):
         super().__init__(orientation='horizontal', **kwargs)
+        self._init_properties()
+        self._setup_layout()
+
+    def _init_properties(self):
+        """Initialize wheel properties"""
         self.numbers = self._initialize_numbers()
         self.colors = self._initialize_colors()
         self.speed = 0
@@ -105,17 +110,31 @@ class RouletteWheel(BoxLayout):
         self.friction = 0.98
         self.color_text = "None"
         self.result = None
+
+    def _setup_layout(self):
+        """Setup flexible layout structure"""
+        # Left container for future betting area (40% of width)
+        left_container = Widget(size_hint=(0.4, 1))
         
-        left_container = Widget(size_hint=(0.5, 1))
-        right_container = BoxLayout(orientation='vertical', size_hint=(0.5, 1))
+        # Right container for wheel and status (60% of width)
+        right_container = BoxLayout(
+            orientation='vertical',
+            size_hint=(0.6, 1),
+            spacing='10dp',
+            padding='10dp'
+        )
         
+        # Wheel display (75% of right container height)
         self.wheel_display = WheelDisplay(
             self.numbers, 
             self.colors, 
-            size_hint=(1, 0.7)
+            size_hint=(1, 0.75)
         )
-        self.status_display = StatusDisplay()
         
+        # Status display (25% of right container height)
+        self.status_display = StatusDisplay(size_hint=(1, 0.25))
+        
+        # Add widgets to containers
         right_container.add_widget(self.wheel_display)
         right_container.add_widget(self.status_display)
         
@@ -142,26 +161,29 @@ class RouletteWheel(BoxLayout):
         return colors
 
     def spin(self):
+        """Start wheel spinning with flexible speed"""
         self.speed = self.default_speed
-        self.target_speed = self.default_speed
-        self.accelerating = True
-        #log the status
         self.status_display.set_status('Spinning')
         print("\n---------Result---------")
-        print(self.status_display.spin_status_label.text)
         Clock.schedule_interval(self.update_spin, 1/60)
 
     def update_spin(self, dt):
+        """Update wheel spin with smooth deceleration"""
         if self.speed > 0.1:
             self.speed *= self.friction
             self.wheel_display.set_angle(self.wheel_display.angle + self.speed)
             self.update_status_label()
             return True
         else:
-            self.status_display.set_status('Finished')
-            self.determine_result()
-            self.update_status_label()
+            self._handle_spin_end()
             return False
+
+    def _handle_spin_end(self):
+        """Handle end of spin sequence"""
+        self.status_display.set_status('Finished')
+        result = self.determine_result()
+        self.update_status_label()
+        return result
 
     def start_spin(self):
         #When press restart spin
