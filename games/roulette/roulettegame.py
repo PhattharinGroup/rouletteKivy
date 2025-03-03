@@ -8,6 +8,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Rectangle
 
 import games.roulette.wheel as wheel
+from games.roulette.bettingTable import BettingTable
 
 class RouletteGameLayout(Screen):
     manager = ObjectProperty(None, allownone=True)
@@ -18,7 +19,7 @@ class RouletteGameLayout(Screen):
         self.bind(parent=self._on_parent)
         self._init_layout()
         self._init_background()
-        self._init_wheel()
+        self._init_roulette()
         self._init_buttons()
 
     def _on_parent(self, instance, value):
@@ -45,23 +46,44 @@ class RouletteGameLayout(Screen):
         )
         self.add_widget(self.layout)
         
-    def _init_wheel(self):
-        wheel_container = BoxLayout(
+    def _init_roulette(self):
+        roulett_container = BoxLayout(
             orientation='horizontal',
-            size_hint=(1, 1)
+            size_hint=(1, 0.8),
+            spacing=dp(0)
         )
         
-        wheel_container.add_widget(Widget(size_hint=(0.4, 1)))
+        self.roulette_wheel = wheel.RouletteWheel(
+            size_hint=(1.4, 1.2),
+            pos_hint={'center_x': 0.3, 'center_y': 0.5}\
+        )
         
-        self.roulette_wheel = wheel.RouletteWheel(size_hint=(0.6, 1))
+        betting_container = BoxLayout(
+            orientation='vertical',
+            size_hint=(0.65, 1),
+            padding=[dp(20), dp(10), dp(5), dp(10)]
+        )
+        self.betting_table = BettingTable(
+            roulette_wheel=self.roulette_wheel,
+            size_hint=(1, 1)
+        )
+        betting_container.add_widget(self.betting_table)
+        roulett_container.add_widget(betting_container)
+        
+        wheel_container = BoxLayout(
+            orientation='vertical',
+            size_hint=(0.35, 1),
+            padding=[dp(0), dp(2), dp(20), dp(2)]
+        )
         wheel_container.add_widget(self.roulette_wheel)
+        roulett_container.add_widget(wheel_container)
         
-        self.layout.add_widget(wheel_container)
+        self.layout.add_widget(roulett_container)
         
     def _init_buttons(self):
         buttons_layout = BoxLayout(
             orientation='vertical',
-            size_hint=(1, 0.3),
+            size_hint=(1, 0.2),
             spacing=dp(20),
             padding=[dp(20), 0, dp(20), dp(20)]  
         )
@@ -87,8 +109,11 @@ class RouletteGameLayout(Screen):
         buttons_layout.add_widget(exit_button)
         self.layout.add_widget(buttons_layout)
 
+    def _init_betting_table(self):
+        self.betting_table = BettingTable()
+        self.layout.add_widget(self.betting_table)
+
     def exit_game(self):
-        # Find ScreenManager if not already set
         if not self.manager:
             parent = self.parent
             while parent:

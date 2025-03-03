@@ -8,28 +8,55 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 
 class StatusDisplay(BoxLayout):
-    """Handles the display of game status and results"""
     def __init__(self, **kwargs):
         super().__init__(orientation='vertical', size_hint=(1, 0.3))
+        # Add bet and result labels
         self.spin_status_label = Label(
             text='Status: Waiting to spin',
-            size_hint=(1, 0.33),
+            size_hint=(1, 0.2),
             font_size='16sp'
+        )
+        self.bet_label = Label(
+            text='Current Bet: None',
+            size_hint=(1, 0.2),
+            font_size='16sp'
+        )
+        self.result_label = Label(
+            text='Result: ---',
+            size_hint=(1, 0.2),
+            font_size='16sp',
+            color=(1, 0.8, 0, 1)  # Gold color
         )
         self.number_label = Label(
             text='Number: ---',
-            size_hint=(1, 0.33),
+            size_hint=(1, 0.2),
             font_size='16sp'
         )
         self.color_label = Label(
             text='Color: ---',
-            size_hint=(1, 0.33),
+            size_hint=(1, 0.2),
             font_size='16sp'
         )
         
+        # Add all labels to display
         self.add_widget(self.spin_status_label)
+        self.add_widget(self.bet_label)
+        self.add_widget(self.result_label)
         self.add_widget(self.number_label)
         self.add_widget(self.color_label)
+
+    def update_bet(self, bet_type, amount):
+        """Update the current bet display"""
+        self.bet_label.text = f'Current Bet: {bet_type} (${amount})'
+        
+    def update_result(self, won, amount):
+        """Update the result display"""
+        if won:
+            self.result_label.text = f'Won: ${amount}'
+            self.result_label.color = (0, 1, 0, 1)  # Green for win
+        else:
+            self.result_label.text = f'Lost: ${amount}'
+            self.result_label.color = (1, 0, 0, 1)  # Red for loss
 
     def update_labels(self, number, color):
         self.number_label.text = f'Number: {number}'
@@ -39,7 +66,6 @@ class StatusDisplay(BoxLayout):
         self.spin_status_label.text = f'Status: {status}'
 
 class WheelDisplay(Widget):
-    """Handles the visual representation of the wheel"""
     def __init__(self, numbers, colors, **kwargs):
         super().__init__(**kwargs)
         self.numbers = numbers
@@ -95,14 +121,33 @@ class WheelDisplay(Widget):
         self.draw_wheel()
 
 class RouletteWheel(BoxLayout):
-    """Main class that coordinates the wheel game"""
     def __init__(self, **kwargs):
         super().__init__(orientation='horizontal', **kwargs)
         self._init_properties()
         self._setup_layout()
+        self.current_bet = None
+        self.bet_amount = 0
+
+    def set_bet(self, bet_type, amount):
+        self.current_bet = bet_type
+        self.bet_amount = amount
+        self.status_display.update_bet(bet_type, amount)
+
+    def _check_win(self, result):
+        if not self.current_bet:
+            return False
+            
+        if isinstance(self.current_bet, int):
+            return result == self.current_bet
+        elif self.current_bet == 'RED':
+            return self.color_text == 'Red'
+        elif self.current_bet == 'BLACK':
+            return self.color_text == 'Black'
+        elif self.current_bet == 'GREEN':
+            return self.color_text == 'Green'
+        return False
 
     def _init_properties(self):
-        """Initialize wheel properties"""
         self.numbers = self._initialize_numbers()
         self.colors = self._initialize_colors()
         self.speed = 0
@@ -112,11 +157,8 @@ class RouletteWheel(BoxLayout):
         self.result = None
 
     def _setup_layout(self):
-        """Setup flexible layout structure"""
-        # Left container for future betting area (40% of width)
         left_container = Widget(size_hint=(0.4, 1))
         
-        # Right container for wheel and status (60% of width)
         right_container = BoxLayout(
             orientation='vertical',
             size_hint=(0.6, 1),
@@ -124,17 +166,14 @@ class RouletteWheel(BoxLayout):
             padding='10dp'
         )
         
-        # Wheel display (75% of right container height)
         self.wheel_display = WheelDisplay(
             self.numbers, 
             self.colors, 
             size_hint=(1, 0.75)
         )
         
-        # Status display (25% of right container height)
         self.status_display = StatusDisplay(size_hint=(1, 0.25))
         
-        # Add widgets to containers
         right_container.add_widget(self.wheel_display)
         right_container.add_widget(self.status_display)
         
@@ -142,14 +181,12 @@ class RouletteWheel(BoxLayout):
         self.add_widget(right_container)
 
     def _initialize_numbers(self):
-        """Initialize the numbers on the roulette wheel."""
         return [
         0, 28, 9, 26, 30, 11, 7, 20, 32, 17, 5, 22, 34, 15, 3, 24, 36, 13, 1,
         00, 27, 10, 25, 29, 12, 8, 19, 31, 18, 6, 21, 33, 16, 4, 23, 35, 14, 2
         ]
 
     def _initialize_colors(self):
-        """Initialize the colors for each number on the wheel."""
         colors = []
         for num in self.numbers:
             if num in [0, 00]:
@@ -161,14 +198,12 @@ class RouletteWheel(BoxLayout):
         return colors
 
     def spin(self):
-        """Start wheel spinning with flexible speed"""
         self.speed = self.default_speed
         self.status_display.set_status('Spinning')
         print("\n---------Result---------")
         Clock.schedule_interval(self.update_spin, 1/60)
 
     def update_spin(self, dt):
-        """Update wheel spin with smooth deceleration"""
         if self.speed > 0.1:
             self.speed *= self.friction
             self.wheel_display.set_angle(self.wheel_display.angle + self.speed)
@@ -179,14 +214,18 @@ class RouletteWheel(BoxLayout):
             return False
 
     def _handle_spin_end(self):
-        """Handle end of spin sequence"""
         self.status_display.set_status('Finished')
         result = self.determine_result()
         self.update_status_label()
+        
+        if self.current_bet is not None:
+            won = self._check_win(result)
+            winnings = self.bet_amount * 2 if won else self.bet_amount
+            self.status_display.update_result(won, winnings)
+            
         return result
 
     def start_spin(self):
-        #When press restart spin
         self.spin()
 
     def update_status_label(self):
@@ -201,16 +240,13 @@ class RouletteWheel(BoxLayout):
         else:
             self.color_text = "Black"
         
-        # Update individual labels
         self.status_display.update_labels(current_number, self.color_text)
 
     def determine_result(self):
-        """Determine the result based on the final angle of the wheel."""
         segment_size = 360 / len(self.numbers)
         final_angle = self.wheel_display.angle % 360
         selected_index = int(final_angle / segment_size)
         self.result = self.numbers[selected_index]
-        #log the result
         print(f"Number: {self.result}")
         print(f"Color: {self.color_text}")
         print(self.status_display.spin_status_label.text)
