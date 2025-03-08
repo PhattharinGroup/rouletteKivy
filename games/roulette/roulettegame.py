@@ -138,12 +138,19 @@ class RouletteGameLayout(Screen):
             self.setup_called = True
 
     def on_spin(self, instance):
-        self.spin_button.disabled = True
-        self.roulette_wheel.spin()
-        Clock.schedule_once(self.on_spin_complete, 7)
+        if self.betting_table.current_bet_button == None:
+            self.spin_button.disabled = True
+            self.spin_button.text = 'PLEASE PLACE A BET!'
+            Clock.schedule_once(self.on_spin_complete, 2)
+        else:
+            self.spin_button.disabled = True
+            self.roulette_wheel.spin()
+            self.spin_button.text = 'SPINNING...'
+            Clock.schedule_once(self.on_spin_complete, 7)
 
     def on_spin_complete(self, dt):
         self.spin_button.disabled = False
+        self.spin_button.text = 'SPIN!'
 
 
 
