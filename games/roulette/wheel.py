@@ -179,8 +179,8 @@ class RouletteWheel(BoxLayout):
         self.numbers = self._initialize_numbers()
         self.colors = self._initialize_colors()
         self.speed = 0
-        self.default_speed = 15 + random.randint(5, 700) / random.randint(100, 150)
-        self.friction = 0.98 + random.randint(1, 20) / 1000
+        self.default_speed = 15 + random.randint(5, 10) / random.randint(5, 10)
+        self.friction = 0.98
         self.color_text = "None"
         self.result = None
 
