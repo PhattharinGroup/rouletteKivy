@@ -250,8 +250,8 @@ class RouletteWheel(BoxLayout):
             won = self._check_win(result)
             winnings = self.bet_amount * 2 if won else self.bet_amount
             self.status_display.update_result(won, winnings)
-            print(f"\nBet: {self.current_bet} (${self.bet_amount})")
-            print(f"{'Won' if won else 'Lost'}: ${winnings}")
+            print(f"\nBet: {self.current_bet}")
+            print(f"{'Won' if won else 'Lost'}")
         
         self.current_bet = None
         self.bet_amount = 0
