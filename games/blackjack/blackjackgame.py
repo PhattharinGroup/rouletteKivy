@@ -1,11 +1,9 @@
 from kivymd.app import MDApp
-from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.label import MDLabel
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.image import AsyncImage
-from kivy.graphics import Color, Rectangle
+from kivy.uix.image import Image
+from kivy.metrics import dp
 import random
 import os
 from kivy.core.window import Window
@@ -13,6 +11,213 @@ from kivy.core.window import Window
 class BlackjackGameLayout(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.spacing = dp(10)
+        self.padding = dp(20)
+        self.size_hint = (1, 1)
+        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
+
+        # Background image
+        self.background = Image(
+            source='assets/PlayingCards/back6.jpeg',
+            size_hint=(1, 1),
+            allow_stretch=True,
+            keep_ratio=False,
+            pos_hint={"center_x": 0.5, "center_y": 0.5}
+        )
+        self.add_widget(self.background)
+
+        # Display money and bet amount centered
+        self.money_bet_box = MDBoxLayout(
+            orientation='horizontal',
+            size_hint_y=None,
+            height=dp(40),
+            spacing=dp(10),
+            pos_hint={"center_x": 0.5}
+        )
+        self.money_label = MDLabel(
+            id='money_label',
+            text="Money: $100000",
+            font_style="H6",
+            halign="center",
+            theme_text_color="Custom",
+            text_color=(1, 1, 1, 1)
+        )
+        self.bet_label = MDLabel(
+            id='bet_label',
+            text="Bet: $5000",
+            font_style="H6",
+            halign="center",
+            theme_text_color="Custom",
+            text_color=(1, 1, 1, 1)
+        )
+        self.money_bet_box.add_widget(self.money_label)
+        self.money_bet_box.add_widget(self.bet_label)
+        self.add_widget(self.money_bet_box)
+
+        # Buttons to increase/decrease bet amount
+        self.bet_buttons_box = MDBoxLayout(
+            orientation='horizontal',
+            size_hint_y=None,
+            height=dp(50),
+            spacing=dp(10),
+            pos_hint={"center_x": 0.5}
+        )
+        self.increase_bet_button = MDRaisedButton(
+            text="+5000",
+            size_hint_x=None,
+            width=dp(80),
+            on_release=self.increase_bet
+        )
+        self.decrease_bet_button = MDRaisedButton(
+            text="-5000",
+            size_hint_x=None,
+            width=dp(80),
+            on_release=self.decrease_bet
+        )
+        self.bet_buttons_box.add_widget(self.increase_bet_button)
+        self.bet_buttons_box.add_widget(self.decrease_bet_button)
+        self.add_widget(self.bet_buttons_box)
+
+        # Display game status message
+        self.info_label = MDLabel(
+            id='info_label',
+            text="Welcome to Blackjack!",
+            font_style="H4",
+            halign="center",
+            markup=True,
+            size_hint_y=None,
+            height=dp(50),
+            theme_text_color="Custom",
+            text_color=(1, 1, 1, 1)
+        )
+        self.add_widget(self.info_label)
+
+        self.click_to_continue = MDLabel(
+            id='click_to_continue',
+            text="Click to Continue",
+            font_style="H5",
+            halign="center",
+            size_hint_y=None,
+            height=dp(50),
+            theme_text_color="Custom",
+            text_color=(1, 1, 1, 1)
+        )
+        self.click_to_continue.bind(on_touch_down=self.start_game)
+        self.add_widget(self.click_to_continue)
+
+        # Area to display dealer's cards
+        self.dealer_cards_box = MDBoxLayout(
+            orientation='vertical',
+            size_hint_y=None,
+            height=dp(200),
+            spacing=dp(10),
+            padding=dp(10),
+            pos_hint={"center_x": 0.5}
+        )
+        self.dealer_label = MDLabel(
+            text="Dealer's Cards",
+            font_style="H5",
+            halign="center",
+            size_hint_y=None,
+            height=self.dealer_label.texture_size[1],
+            theme_text_color="Custom",
+            text_color=(1, 1, 1, 1)
+        )
+        self.dealer_cards = MDBoxLayout(
+            id='dealer_cards',
+            orientation='horizontal',
+            size_hint_x=None,
+            width=dp(400),
+            height=dp(120),
+            spacing=dp(10),
+            pos_hint={"center_x": 0.5}
+        )
+        self.dealer_cards_box.add_widget(self.dealer_label)
+        self.dealer_cards_box.add_widget(self.dealer_cards)
+        self.add_widget(self.dealer_cards_box)
+
+        # Area to display player's cards
+        self.player_cards_box = MDBoxLayout(
+            orientation='vertical',
+            size_hint_y=None,
+            height=dp(200),
+            spacing=dp(10),
+            padding=dp(10),
+            pos_hint={"center_x": 0.5}
+        )
+        self.player_label = MDLabel(
+            text="Player's Cards",
+            font_style="H5",
+            halign="center",
+            size_hint_y=None,
+            height=self.player_label.texture_size[1],
+            theme_text_color="Custom",
+            text_color=(1, 1, 1, 1)
+        )
+        self.player_cards = MDBoxLayout(
+            id='player_cards',
+            orientation='horizontal',
+            size_hint_x=None,
+            width=dp(400),
+            height=dp(120),
+            spacing=dp(10),
+            pos_hint={"center_x": 0.5}
+        )
+        self.player_cards_box.add_widget(self.player_label)
+        self.player_cards_box.add_widget(self.player_cards)
+        self.add_widget(self.player_cards_box)
+
+        # Game control buttons
+        self.control_buttons_box = MDBoxLayout(
+            orientation='horizontal',
+            spacing=dp(20),
+            size_hint_y=None,
+            height=dp(60),
+            pos_hint={"center_x": 0.5}
+        )
+        self.deal_button = MDRaisedButton(
+            text='Deal',
+            font_size=dp(18),
+            size_hint_x=None,
+            width=dp(100),
+            height=dp(50),
+            md_bg_color=(0, 0, 1, 1),
+            on_press=self.deal
+        )
+        self.hit_button = MDRaisedButton(
+            text='Hit',
+            font_size=dp(18),
+            size_hint_x=None,
+            width=dp(100),
+            height=dp(50),
+            md_bg_color=(1, 0, 0, 1),
+            on_press=self.hit
+        )
+        self.stand_button = MDRaisedButton(
+            text='Stand',
+            font_size=dp(18),
+            size_hint_x=None,
+            width=dp(100),
+            height=dp(50),
+            md_bg_color=(0, 0.6, 0, 1),
+            on_press=self.stand
+        )
+        self.back_to_menu_button = MDRaisedButton(
+            text='Back to Menu',
+            font_size=dp(18),
+            size_hint_x=None,
+            width=dp(120),
+            height=dp(50),
+            md_bg_color=(0.3, 0.3, 0.3, 1),
+            on_press=self.back_to_menu
+        )
+        self.control_buttons_box.add_widget(self.deal_button)
+        self.control_buttons_box.add_widget(self.hit_button)
+        self.control_buttons_box.add_widget(self.stand_button)
+        self.control_buttons_box.add_widget(self.back_to_menu_button)
+        self.add_widget(self.control_buttons_box)
+
         self.money = 100000
         self.bet = 5000
         self.deck = self.create_deck()
@@ -82,17 +287,17 @@ class BlackjackGameLayout(MDBoxLayout):
         else:
             print("Error: money หรือ bet ไม่ถูกกำหนด")
 
-    def increase_bet(self):
+    def increase_bet(self, instance):
         if self.bet + 5000 <= self.money:
             self.bet += 5000
             self.update_money_display()
 
-    def decrease_bet(self):
+    def decrease_bet(self, instance):
         if self.bet - 5000 >= 0:
             self.bet -= 5000
             self.update_money_display()
 
-    def deal(self):
+    def deal(self, instance):
         if self.bet > 0 and self.deal_button_enabled:
             if len(self.deck) < 4:  # ✅ ถ้าไพ่ไม่พอแจก 4 ใบ ให้รีเซ็ตเด็คใหม่
                 print("Deck is empty! Resetting deck...")
@@ -112,14 +317,14 @@ class BlackjackGameLayout(MDBoxLayout):
             else:
                 print("Error: Not enough cards to deal!")
 
-    def hit(self):
+    def hit(self, instance):
         if self.game_started:
             self.player_hand.append(self.deck.pop())
             self.update_cards()
             if self.calculate_score(self.player_hand) > 21:
                 self.check_winner()
 
-    def stand(self):
+    def stand(self, instance):
         if self.game_started:
             while self.calculate_score(self.dealer_hand) < 17:
                 self.dealer_hand.append(self.deck.pop())
@@ -180,7 +385,7 @@ class BlackjackGameLayout(MDBoxLayout):
         self.game_started = False
         self.deal_button_enabled = True  # Re-enable the "Deal" button
 
-    def start_game(self):
+    def start_game(self, instance, touch):
         if not self.game_started:
             self.game_started = True
             self.info_label.text = ""
@@ -189,3 +394,9 @@ class BlackjackGameLayout(MDBoxLayout):
             self.player_hand = [self.deck.pop(), self.deck.pop()]
             self.dealer_hand = [self.deck.pop(), self.deck.pop()]
             self.update_cards()
+
+    def back_to_menu(self, instance):
+        app = MDApp.get_running_app()
+        app.root.current = 'menu'
+        app.root.transition.direction = "up"
+        self.setup()

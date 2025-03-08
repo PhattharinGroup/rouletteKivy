@@ -62,7 +62,6 @@ class BlackjackScreen(MDScreen):
             size_hint=(1, 1),
             pos_hint={'center_x': 0.5, 'center_y': 0.5}
         )
-        Builder.load_file('games/blackjack/blackjackscreen.kv')
         self.game = BlackjackGame()
         layout.add_widget(self.game)
         self.add_widget(layout)
@@ -78,7 +77,7 @@ class MainApp(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Blue"  
         self.theme_cls.accent_palette = "Orange" 
-        Builder.load_file('main.kv')
+        Builder.load_file('main.kv')  # Ensure main.kv is loaded
         Window.size = (1200, 800) 
         Window.left = 300
         Window.top = 100
