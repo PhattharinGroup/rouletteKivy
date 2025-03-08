@@ -146,7 +146,7 @@ class RouletteGameLayout(Screen):
             self.spin_button.disabled = True
             self.roulette_wheel.spin()
             self.spin_button.text = 'SPINNING...'
-            Clock.schedule_once(self.on_spin_complete, 7)
+            Clock.schedule_once(self.on_spin_complete, 5)
 
     def on_spin_complete(self, dt):
         self.spin_button.disabled = False

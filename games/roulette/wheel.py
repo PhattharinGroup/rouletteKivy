@@ -180,7 +180,7 @@ class RouletteWheel(BoxLayout):
         self.colors = self._initialize_colors()
         self.speed = 0
         self.default_speed = 15 + random.randint(5, 10) / random.randint(5, 10)
-        self.friction = 0.98
+        self.friction = random.randint(9600, 9800) / 10000
         self.color_text = "None"
         self.result = None
 
@@ -256,7 +256,10 @@ class RouletteWheel(BoxLayout):
         self.current_bet = None
         self.bet_amount = 0
         self.status_display.update_bet('None', 0)
-        print("Bet reset for next spin")
+        self.speed = 0
+        self.default_speed = 15 + random.randint(5, 10) / random.randint(5, 10)
+        self.friction = random.randint(9700, 9800) / 10000
+        print("Bet & Wheel has been reset for next spin")
         print("-------End Result-------")
         
         self.dispatch('on_spin_complete')
