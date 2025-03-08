@@ -229,7 +229,7 @@ class RouletteWheel(BoxLayout):
         self.speed = self.default_speed
         self.status_display.set_status('Spinning')
         print("\n---------Result---------")
-        Clock.schedule_interval(self.update_spin, 1/30)
+        Clock.schedule_interval(self.update_spin, 1/45)
 
     def update_spin(self, dt):
         if self.speed > 0.1:
