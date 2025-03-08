@@ -48,15 +48,15 @@ class StatusDisplay(BoxLayout):
 
     def update_bet(self, bet_type, amount):
         """Update the current bet display"""
-        self.bet_label.text = f'Current Bet: {bet_type} (${amount})'
+        self.bet_label.text = f'Current Bet: {bet_type}'
         
     def update_result(self, won, amount):
         """Update the result display"""
         if won:
-            self.result_label.text = f'Won: ${amount}'
+            self.result_label.text = f'YOU WON, EPIC GAMBLER'
             self.result_label.color = (0, 1, 0, 1)  # Green for win
         else:
-            self.result_label.text = f'Lost: ${amount}'
+            self.result_label.text = f'YOU LOST, SO NOOB'
             self.result_label.color = (1, 0, 0, 1)  # Red for loss
 
     def update_labels(self, number, color):
