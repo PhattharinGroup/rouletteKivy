@@ -252,6 +252,7 @@ class BlackjackGameUI(MDBoxLayout):
         self.dealer_cards.clear_widgets()
 
     def back_to_menu(self, instance):
+        self.setup_game()  # Reset the game
         app = MDApp.get_running_app()
         app.root.current = 'menu'
 
