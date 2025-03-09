@@ -226,6 +226,15 @@ class BlackjackGameUI(MDBoxLayout):
         self.info_label.text = result
         self.game_logic.money += money_change
         self.update_money_display()
+        if self.game_logic.money <= 0:
+            self.info_label.text = "You have lost all your money! Game over."
+            self.disable_game()
+
+    def disable_game(self):
+        """ ปิดการใช้งานปุ่มเมื่อเกมจบ """
+        self.deal_button.disabled = True
+        self.hit_button.disabled = True
+        self.stand_button.disabled = True
 
     def update_cards(self):
         """ แสดงไพ่ที่ผู้เล่นและเจ้ามือมี """
