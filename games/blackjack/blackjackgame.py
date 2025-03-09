@@ -179,7 +179,7 @@ class BlackjackGameUI(MDBoxLayout):
 
     def setup_game(self):
         """ รีเซ็ตเกมใหม่ """
-        self.game_logic = BlackjackGame()  # Use BlackjackGame instead of BlackjackGameLogic
+        self.game_logic = BlackjackGame()  
         self.update_money_display()
         self.clear_cards()
         self.info_label.text = "Welcome to Blackjack!"
@@ -188,6 +188,18 @@ class BlackjackGameUI(MDBoxLayout):
         """ อัปเดตเงินและเดิมพัน """
         self.money_label.text = f"Money: ${self.game_logic.money}"
         self.bet_label.text = f"Bet: ${self.game_logic.bet}"
+        self.update_money_label_color()
+
+    def update_money_label_color(self):
+        """ อัปเดตสีของป้ายเงินตามจำนวนเงิน """
+        money = self.game_logic.money
+        if money > 50000:
+            color = (0, 1, 0, 1)  # Green
+        elif money > 20000:
+            color = (1, 1, 0, 1)  # Yellow
+        else:
+            color = (1, 0, 0, 1)  # Red
+        self.money_label.text_color = color
 
     def deal(self, instance):
         """ แจกไพ่ให้ผู้เล่นและเจ้ามือ """
