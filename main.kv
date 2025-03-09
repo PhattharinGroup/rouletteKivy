@@ -5,14 +5,14 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    Video:
-        source: 'assets/backgroundRoulette.mp4'  # Path to your video file
-        state: 'play'
-        options: {'eos': 'loop'}  # กำหนดให้วิดีโอเล่นวนลูป
-        allow_stretch: True  # ขยายวิดีโอให้เต็มหน้าจอ
-        keep_ratio: False  # ไม่คำนึงถึงอัตราส่วนของวิดีโอ
-        size: self.size
-        pos: self.pos
+   # Video:
+   #     source: 'assets/backgroundRoulette.mp4' 
+   #     state: 'play'
+   #     options: {'eos': 'loop'}  
+   #     allow_stretch: True 
+   #     keep_ratio: False  
+   #     size: self.size
+   #     pos: self.pos
     
     MDBoxLayout:
         orientation: 'vertical'
@@ -27,7 +27,7 @@
             font_style: 'H1' 
             halign: 'center'
             theme_text_color: 'Custom'
-            text_color: 1, 0.8, 0, 1  # สีตัวอักษร
+            text_color: 1, 0.8, 0, 1  
             size_hint_y: None
             height: dp(80) 
 

@@ -5,7 +5,7 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.animation import Animation
 from games.roulette.roulettegame import RouletteGameLayout as RouletteGame
-from games.blackjack.blackjackgame import BlackjackGameLayout as BlackjackGame
+from games.blackjack.blackjackgame import BlackjackGameUI as BlackjackGame  # Update import
 from kivy.core.window import Window
 from kivy.uix.button import Button
 from kivy.graphics import Color, Rectangle
@@ -62,7 +62,7 @@ class BlackjackScreen(MDScreen):
             size_hint=(1, 1),
             pos_hint={'center_x': 0.5, 'center_y': 0.5}
         )
-        self.game = BlackjackGame()
+        self.game = BlackjackGame()  # Use BlackjackGameUI instead of BlackjackGame
         layout.add_widget(self.game)
         self.add_widget(layout)
 
@@ -90,3 +90,4 @@ class MainApp(MDApp):
 
 if __name__ == '__main__':
     MainApp().run()
+
