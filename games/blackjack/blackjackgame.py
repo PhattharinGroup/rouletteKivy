@@ -83,7 +83,7 @@ class BlackjackGameUI(MDBoxLayout):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.game_logic = BlackjackGame()  # Use BlackjackGame instead of BlackjackGameLogic
+        self.game_logic = BlackjackGame()  
         self.orientation = 'vertical'
         self.spacing = dp(10)
         self.padding = dp(20)
@@ -106,24 +106,66 @@ class BlackjackGameUI(MDBoxLayout):
     def setup_ui(self):
         """ ตั้งค่า UI เริ่มต้น """
 
-        self.money_label = MDLabel(font_style="H6", halign="center", text_color=(1, 1, 1, 1))
-        self.bet_label = MDLabel(font_style="H6", halign="center", text_color=(1, 1, 1, 1))
+        self.money_label = MDLabel(
+            font_style="H6", 
+            halign="center", 
+            theme_text_color="Custom", 
+            text_color=(1, 1, 1, 1)
+        )
+        self.bet_label = MDLabel(
+            font_style="H6", 
+            halign="center", 
+            theme_text_color="Custom", 
+            text_color=(1, 1, 1, 1)
+        )
 
-        self.money_bet_box = MDBoxLayout(orientation='horizontal', size_hint_y=None, height=dp(40), spacing=dp(10))
+        self.money_bet_box = MDBoxLayout(
+            orientation='horizontal', 
+            size_hint_y=None, 
+            height=dp(40), 
+            spacing=dp(10)
+        )
         self.money_bet_box.add_widget(self.money_label)
         self.money_bet_box.add_widget(self.bet_label)
         self.add_widget(self.money_bet_box)
 
-        self.info_label = MDLabel(font_style="H4", halign="center", size_hint_y=None, height=dp(50), text="Welcome to Blackjack!", text_color=(1, 1, 1, 1))
+        self.info_label = MDLabel(
+            font_style="H4", 
+            halign="center", 
+            size_hint_y=None, 
+            height=dp(50), 
+            text="Welcome to Blackjack!", 
+            theme_text_color="Custom", 
+            text_color=(1, 1, 1, 1)
+        )
         self.add_widget(self.info_label)
 
-        self.dealer_cards = MDBoxLayout(orientation='horizontal', size_hint_x=None, width=dp(400), height=dp(120), spacing=dp(10), pos_hint={"center_x": 0.5})
-        self.player_cards = MDBoxLayout(orientation='horizontal', size_hint_x=None, width=dp(400), height=dp(120), spacing=dp(10), pos_hint={"center_x": 0.5})
+        self.dealer_cards = MDBoxLayout(
+            orientation='horizontal', 
+            size_hint_x=None, 
+            width=dp(400), 
+            height=dp(120), 
+            spacing=dp(10), 
+            pos_hint={"center_x": 0.5}
+        )
+        self.player_cards = MDBoxLayout(
+            orientation='horizontal', 
+            size_hint_x=None, 
+            width=dp(400), 
+            height=dp(120), 
+            spacing=dp(10), 
+            pos_hint={"center_x": 0.5}
+        )
 
         self.add_widget(self.dealer_cards)
         self.add_widget(self.player_cards)
 
-        self.control_buttons_box = MDBoxLayout(orientation='horizontal', spacing=dp(20), size_hint_y=None, height=dp(60))
+        self.control_buttons_box = MDBoxLayout(
+            orientation='horizontal', 
+            spacing=dp(20), 
+            size_hint_y=None, 
+            height=dp(60)
+        )
         self.deal_button = MDRaisedButton(text='Deal', on_press=self.deal)
         self.hit_button = MDRaisedButton(text='Hit', on_press=self.hit)
         self.stand_button = MDRaisedButton(text='Stand', on_press=self.stand)
