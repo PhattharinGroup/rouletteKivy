@@ -69,13 +69,13 @@ class BlackjackGame:
         dealer_score = self.calculate_score(self.dealer_hand)
 
         if player_score > 21:
-            return "Dealer wins!", "red", -self.bet
+            return "Dealer wins!", -self.bet
         elif dealer_score > 21 or player_score > dealer_score:
-            return "You win!", "green", self.bet
+            return "You win!", self.bet
         elif player_score < dealer_score:
-            return "Dealer wins!", "red", -self.bet
+            return "Dealer wins!", -self.bet
         else:
-            return "It's a tie!", "yellow", 0
+            return "It's a tie!", 0
 
 
 class BlackjackGameUI(MDBoxLayout):
@@ -210,8 +210,8 @@ class BlackjackGameUI(MDBoxLayout):
 
     def check_winner(self):
         """ ตรวจสอบผลลัพธ์ของเกม """
-        result, color, money_change = self.game_logic.check_winner()
-        self.info_label.text = f"[color={color}]{result}[/color]"
+        result, money_change = self.game_logic.check_winner()
+        self.info_label.text = result
         self.game_logic.money += money_change
         self.update_money_display()
 
