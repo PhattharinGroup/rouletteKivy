@@ -7,6 +7,7 @@ from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.label import MDLabel
+from kivy.graphics import Color, Rectangle
 
 
 class BlackjackGame:
@@ -88,10 +89,19 @@ class BlackjackGameUI(MDBoxLayout):
         self.padding = dp(20)
         self.size_hint = (1, 1)
         
+        with self.canvas.before:
+            Color(0, 0, 0, 1)  # Set the background color to black
+            self.rect = Rectangle(size=self.size, pos=self.pos)
+            self.bind(size=self._update_rect, pos=self._update_rect)
+
         self.setup_ui()
         self.setup_game()
 
         Window.bind(on_resize=self.resize_window)
+
+    def _update_rect(self, *args):
+        self.rect.pos = self.pos
+        self.rect.size = self.size
 
     def setup_ui(self):
         """ ตั้งค่า UI เริ่มต้น """
