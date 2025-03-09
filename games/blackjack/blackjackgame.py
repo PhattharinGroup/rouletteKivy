@@ -107,8 +107,8 @@ class BlackjackGameUI(MDBoxLayout):
         self.info_label = MDLabel(font_style="H4", halign="center", size_hint_y=None, height=dp(50), text="Welcome to Blackjack!", text_color=(1, 1, 1, 1))
         self.add_widget(self.info_label)
 
-        self.dealer_cards = MDBoxLayout(orientation='horizontal', size_hint_x=None, width=dp(400), height=dp(120), spacing=dp(10))
-        self.player_cards = MDBoxLayout(orientation='horizontal', size_hint_x=None, width=dp(400), height=dp(120), spacing=dp(10))
+        self.dealer_cards = MDBoxLayout(orientation='horizontal', size_hint_x=None, width=dp(400), height=dp(120), spacing=dp(10), pos_hint={"center_x": 0.5})
+        self.player_cards = MDBoxLayout(orientation='horizontal', size_hint_x=None, width=dp(400), height=dp(120), spacing=dp(10), pos_hint={"center_x": 0.5})
 
         self.add_widget(self.dealer_cards)
         self.add_widget(self.player_cards)
