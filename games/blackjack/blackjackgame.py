@@ -166,10 +166,10 @@ class BlackjackGameUI(MDBoxLayout):
             size_hint_y=None, 
             height=dp(60)
         )
-        self.deal_button = MDRaisedButton(text='Deal', on_press=self.deal)
-        self.hit_button = MDRaisedButton(text='Hit', on_press=self.hit)
-        self.stand_button = MDRaisedButton(text='Stand', on_press=self.stand)
-        self.back_to_menu_button = MDRaisedButton(text='Back to Menu', on_press=self.back_to_menu)
+        self.deal_button = MDRaisedButton(text='Deal', on_press=self.deal, md_bg_color=(0, 0, 1, 1))  # Blue
+        self.hit_button = MDRaisedButton(text='Hit', on_press=self.hit, md_bg_color=(0, 1, 0, 1), text_color=(0, 0, 0, 1))  # Green
+        self.stand_button = MDRaisedButton(text='Stand', on_press=self.stand, md_bg_color=(1, 0, 0, 1))  # Red
+        self.back_to_menu_button = MDRaisedButton(text='Back to Menu', on_press=self.back_to_menu, md_bg_color=(0, 1, 1, 1), text_color=(0, 0, 0, 1))  # Yellow with black text
 
         self.control_buttons_box.add_widget(self.deal_button)
         self.control_buttons_box.add_widget(self.hit_button)
